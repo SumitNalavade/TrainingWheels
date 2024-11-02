@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FileUploader } from "react-drag-drop-files";
 import { CiFileOn } from "react-icons/ci";
 import { CiImageOn } from "react-icons/ci";
@@ -10,20 +10,14 @@ import { BsCameraVideo } from "react-icons/bs";
 
 const fileTypes = ["jpeg", "jpg", "png", "mov", "pdf", "mp4"];
 
-export default function Sidebar() {
-    const [files, setFiles] = useState<File[]>([]);
-    const [showSidebar, setShowSidebar] = useState(true);
+interface SidebarProps {
+    files: File[];
+    onFileChange: (file: File) => void;
+    showSidebar: boolean;
+    toggleSidebar: () => void;
+}
 
-    const handleChange = (file: File) => {
-        setFiles((prevFiles) => [...prevFiles, file]);
-    };
-
-    // TODO: implement fetch request to populate files state
-    // useEffect(() => {
-    //     const getFiles = () => {};
-    //     getFiles();
-    // })
-
+const Sidebar: React.FC<SidebarProps> = ({ files, onFileChange, showSidebar, toggleSidebar }) => {
     const getFileIcon = (file: File) => {
         switch (file.type) {
             case "image/jpeg":
@@ -41,22 +35,13 @@ export default function Sidebar() {
     };
 
     return (
-        <div className="flex h-screen">
-
+        <>
             {showSidebar ? (
                 <div className="w-[30%] bg-[#FBF7FF] p-4 flex flex-col min-h-0">
-
-                    {/* icons */}
                     <div className="flex justify-between items-center mb-4 p-2">
-                        <div className="ml-4">
-                            <FiSidebar size={40} onClick={() => setShowSidebar(!showSidebar)} className="cursor-pointer" />
-                        </div>
-                        <div className="mr-4">
-                            <FaPenNib size={40} />
-                        </div>
+                        <FiSidebar size={40} onClick={toggleSidebar} className="cursor-pointer" />
+                        <FaPenNib size={40} />
                     </div>
-
-                    {/* search bar */}
                     <div className="mb-4">
                         <input
                             type="text"
@@ -64,8 +49,6 @@ export default function Sidebar() {
                             className="w-full p-4 text-xl border rounded-lg focus:outline-none text-gray-700 placeholder-gray-500 bg-[#E0E0E0]"
                         />
                     </div>
-
-                    {/* load files */}
                     <div className="flex-grow overflow-y-auto p-4">
                         <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
                             {files.map((file, index) => (
@@ -76,9 +59,8 @@ export default function Sidebar() {
                             ))}
                         </div>
                     </div>
-
                     <FileUploader
-                        handleChange={handleChange}
+                        handleChange={onFileChange}
                         name="file"
                         types={fileTypes}
                     >
@@ -88,39 +70,13 @@ export default function Sidebar() {
                         </div>
                     </FileUploader>
                 </div>
-
             ) : (
                 <div className="w-[7%] bg-gray-100 p-4 flex flex-col min-h-0">
-                    <div className="flex justify-between items-center mb-4 p-2">
-                        <div className="ml-4">
-                            <FiSidebar size={40} onClick={() => setShowSidebar(!showSidebar)} className="cursor-pointer" />
-                        </div>
-                    </div>
+                    <FiSidebar size={40} onClick={toggleSidebar} className="cursor-pointer" />
                 </div>
             )}
-
-            <div className="w-3/4 p-6 flex flex-col justify-between">
-                <div className="space-y-4 overflow-y-auto">
-                    <div className="flex justify-start">
-                        <div className="bg-gray-200 p-3 rounded-lg max-w-xs text-sm">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </div>
-                    </div>
-                    <div className="flex justify-end">
-                        <div className="bg-purple-100 p-3 rounded-lg max-w-xs text-sm">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </div>
-                    </div>
-                </div>
-
-                <div className="flex items-center mt-4 border-t border-gray-200 pt-4">
-                    <input
-                        type="text"
-                        placeholder="Type your message here..."
-                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none text-sm"
-                    />
-                </div>
-            </div>
-        </div>
+        </>
     );
-}
+};
+
+export default Sidebar;
