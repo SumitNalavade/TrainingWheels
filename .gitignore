@@ -1,0 +1,8 @@
+node_modules
+yarn-error.log
+.vite
+.env
+.env.development
+.env.production
+.DS_Store
+venv
