@@ -22,8 +22,9 @@ supabase_url = os.getenv('SUPABASE_URL')
 supabase_key = os.getenv('SUPABASE_KEY')
 supabase_bucket_name = "user_content"
 
-#connecting to supabase table
+# connecting to supabase table
 supabase: Client = create_client(supabase_url, supabase_key)
+
 
 def upload_pdf(user_id, file):
     '''
@@ -42,8 +43,9 @@ def upload_pdf(user_id, file):
         tmp_path = tmp.name
 
     # Initialize the text splitter for document chunking
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=0)
-    
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=200, chunk_overlap=0)
+
     # Initialize the vector store with the given user ID as the collection name
     vector_store = PGVector(
         embeddings=openai_embeddings,
@@ -61,7 +63,7 @@ def upload_pdf(user_id, file):
         vector_store.add_documents(docs)
 
         print(f"Successfully processed and uploaded {file.filename}")
-        
+
     except Exception as e:
         print(f"Error processing file {file.filename}: {e}")
     finally:
@@ -69,7 +71,9 @@ def upload_pdf(user_id, file):
         try:
             os.remove(tmp_path)
         except Exception as cleanup_error:
-            print(f"Error cleaning up temporary file {tmp_path}: {cleanup_error}")
+            print(
+                f"Error cleaning up temporary file {tmp_path}: {cleanup_error}")
+
 
 def upload_image(user_id, file):
     '''
@@ -84,8 +88,9 @@ def upload_image(user_id, file):
         tmp_path = tmp.name
 
     # Initialize the text splitter for document chunking
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=200, chunk_overlap=0)
-    
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=200, chunk_overlap=0)
+
     # Initialize the vector store with the given user ID as the collection name
     vector_store = PGVector(
         embeddings=openai_embeddings,
@@ -96,14 +101,14 @@ def upload_image(user_id, file):
 
     try:
         full_text = ""
-        
+
         # Handle PDFs containing images
         if file.filename.lower().endswith('.pdf'):
             images = convert_from_path(tmp_path)
             for image in images:
                 text = pytesseract.image_to_string(image)
                 full_text += text + "\n"
-        
+
         # Handle direct image uploads
         elif file.filename.lower().endswith(('.jpg', '.jpeg', '.png')):
             with Image.open(tmp_path) as img:
@@ -112,7 +117,7 @@ def upload_image(user_id, file):
         # Split the extracted text into chunks
         if full_text.strip():
             docs = text_splitter.create_documents([full_text])
-            
+
             # Add documents to the vector store
             vector_store.add_documents(docs)
             print(f"Successfully processed and uploaded {file.filename}")
@@ -121,13 +126,15 @@ def upload_image(user_id, file):
 
     except Exception as e:
         print(f"Error processing file {file.filename}: {e}")
-        
+
     finally:
         # Ensure the temporary file is deleted after processing
         try:
             os.remove(tmp_path)
         except Exception as cleanup_error:
-            print(f"Error cleaning up temporary file {tmp_path}: {cleanup_error}")
+            print(
+                f"Error cleaning up temporary file {tmp_path}: {cleanup_error}")
+
 
 @processing_routes_bp.route("/upload", methods=["POST"])
 def add_file():
@@ -142,7 +149,7 @@ def add_file():
         # Input validation: file
         if 'file' not in request.files:
             return jsonify({"error": "No file part in the request"}), 400
-        
+
         file = request.files['file']
         user_id = request.args['user_id']
 
@@ -152,14 +159,14 @@ def add_file():
         # Input validation: user_id
         if 'user_id' not in request.args:
             return jsonify({"error": "No user_id provided in the request"}), 400
-        
+
         # Get file type and determine content-type
         file_type = file.filename.rsplit('.', 1)[-1].lower()
         content_type = file.content_type or 'application/octet-stream'
 
-        if(content_type == 'image/png'):
+        if (content_type == 'image/png'):
             upload_image(user_id, file)
-        elif(content_type == 'application/pdf'):
+        elif (content_type == 'application/pdf'):
             upload_pdf(user_id, file)
         else:
             return jsonify({"error": "File format not supported"}), 400
@@ -167,7 +174,7 @@ def add_file():
         # Create a temporary file to handle the upload
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
             file.save(temp_file.name)
-            
+
             # Upload to Supabase with proper content-type
             with open(temp_file.name, 'rb') as f:
                 response = supabase.storage.from_(supabase_bucket_name).upload(
@@ -175,13 +182,14 @@ def add_file():
                     path=file.filename,
                     file_options={"content-type": content_type}
                 )
-        
+
         # Clean up temporary file
         os.unlink(temp_file.name)
-        
+
         # Retrieve the public URL
-        public_url = supabase.storage.from_(supabase_bucket_name).get_public_url(file.filename)
-        
+        public_url = supabase.storage.from_(
+            supabase_bucket_name).get_public_url(file.filename)
+
         # Add entry to the files table
         new_file = File(
             url=public_url,
@@ -189,17 +197,17 @@ def add_file():
             type=file_type,
             user_id=user_id
         )
-        
+
         # Add the new file to the session and commit
         db.session.add(new_file)
         db.session.commit()
-        
+
         print("/user-add-file successfully added a file to the database")
         return jsonify({
             "status": "successful",
             "file_id": new_file.id
         }), 200
-        
+
     except Exception as e:
         print("Error @ /user-add-file ||", e)
         return jsonify({
@@ -207,10 +215,120 @@ def add_file():
             "message": str(e)
         }), 500
 
-# @processing_routes_bp.route("/upload", methods=['POST'])
-# def test():
-#     file = request.files['file']
 
-#     upload_pdf("fcebf80c-cef7-4122-9a9f-35fb3a6c588b", file)
+@processing_routes_bp.route("/get_file", methods=["GET"])
+def get_file():
+    '''
+    Given a user_id, all associated urls and their corresponding file names will be returned.
 
-#     return "success"
+    Input: 
+        1. user_id : user id of the user whose files and urls need to be retrieved
+    '''
+
+    try:
+        # input validation: user_id
+        if 'user_id' not in request.args:
+            return jsonify({"error": "No user_id provided in the request"}), 400
+
+        # access the user id
+        user_id = request.args['user_id']
+
+        # retrieve all associated URLs and file names and turn it into a list of dicts
+        files = db.session.query(File.url, File.name).filter(
+            File.user_id == user_id).all()
+        results = [{"url": file.url, "name": file.name} for file in files]
+
+        return jsonify(results), 200
+
+    except Exception as e:
+        print("Error @ /user-get-file ||", e)
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
+@processing_routes_bp.route("/delete_file", methods=["DELETE"])
+def delete_file():
+    '''
+    Given a user_id and a filename, a particular user's file will be deleted from the file table and supabase if it exists. 
+
+    Input: 
+        1. user_id : user id of the user whose file needs to be deleted
+        2. filename : the name of the file which needs to be deleted
+    '''
+    try:
+        # input validation: user_id
+        if 'user_id' not in request.args:
+            return jsonify({"error": "No user_id provided in the request"}), 400
+
+        # access the user id
+        user_id = request.args['user_id']
+
+        # input validation: filename
+        if 'filename' not in request.args:
+            return jsonify({"error": "No filename provided in the request"}), 400
+
+        # access the filename
+        filename = request.args['filename']
+
+        # perform deletion on supabase
+        supabase.storage.from_(supabase_bucket_name).remove([filename])
+
+        # perform deletion on the file table
+        db.session.query(File).filter(File.name == filename,
+                                      File.user_id == user_id).delete()
+        db.session.commit()
+
+        return jsonify({"status": "successful"}), 200
+
+    except Exception as e:
+        print("Error @ /user-delete-file ||", e)
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+
+@processing_routes_bp.route("/delete_all_files", methods=["DELETE"])
+def delete_all_file():
+    '''
+    Given a user_id, delete all their associated files in the file table.
+
+    Input: 
+        1. user_id : user id of the user whose files needs to be deleted
+    '''
+    try:
+        # input validation: user_id
+        if 'user_id' not in request.args:
+            return jsonify({"error": "No user_id provided in the request"}), 400
+
+        # access the user id
+        user_id = request.args['user_id']
+
+        # identify the filenames of all the files that belong to user_id user
+        file_names = db.session.query(File.name).filter(
+            File.user_id == user_id).all()
+        names = [file.name for file in file_names]
+
+        print(names)
+
+        # delete each file from supabase
+        for name in names:
+            supabase.storage.from_(supabase_bucket_name).remove([name])
+
+        # access the user id
+        user_id = request.args['user_id']
+
+        # perform deletion on the file table
+        db.session.query(File).filter(File.user_id == user_id).delete()
+        db.session.commit()
+
+        return jsonify({"status": "successful"}), 200
+
+    except Exception as e:
+        print("Error @ /user-delete-all-file ||", e)
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
