@@ -117,6 +117,118 @@ def add_file():
             "status": "error",
             "message": str(e)
         }), 500
+
+@app.route("/user-get-file", methods=["GET"])
+def get_file():
+    '''
+    Given a user_id, all associated urls and their corresponding file names will be returned.
+
+    Input: 
+        1. user_id : user id of the user whose files and urls need to be retrieved
+    '''
+
+    try:
+        #input validation: user_id
+        if 'user_id' not in request.args:
+            return jsonify({"error": "No user_id provided in the request"}), 400
+
+        #access the user id
+        user_id = request.args['user_id']
+
+        #retrieve all associated URLs and file names and turn it into a list of dicts
+        files = db.session.query(File.url, File.name).filter(File.user_id == user_id).all()
+        results = [{"url": file.url, "name": file.name} for file in files]
+
+        return jsonify(results), 200
+    
+    except Exception as e:
+        print("Error @ /user-get-file ||", e)
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+@app.route("/user-delete-file", methods=["DELETE"])
+def delete_file():
+    '''
+    Given a user_id and a filename, a particular user's file will be deleted from the file table and supabase if it exists. 
+
+    Input: 
+        1. user_id : user id of the user whose file needs to be deleted
+        2. filename : the name of the file which needs to be deleted
+    '''
+    try:
+        #input validation: user_id
+        if 'user_id' not in request.args:
+            return jsonify({"error": "No user_id provided in the request"}), 400
+
+        #access the user id
+        user_id = request.args['user_id']
+
+        #input validation: filename
+        if 'filename' not in request.args:
+            return jsonify({"error": "No filename provided in the request"}), 400
+
+        #access the filename
+        filename = request.args['filename']
+
+        #perform deletion on supabase
+        supabase.storage.from_(supabase_bucket_name).remove([filename])
+
+        #perform deletion on the file table
+        db.session.query(File).filter(File.name == filename, File.user_id == user_id).delete()
+        db.session.commit()
+
+        return jsonify({"status": "successful"}), 200
+    
+    except Exception as e:
+        print("Error @ /user-delete-file ||", e)
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+    
+@app.route("/user-delete-all-file", methods=["DELETE"])
+def delete_all_file():
+    '''
+    Given a user_id, delete all their associated files in the file table.
+
+    Input: 
+        1. user_id : user id of the user whose files needs to be deleted
+    '''
+    try:
+        #input validation: user_id
+        if 'user_id' not in request.args:
+            return jsonify({"error": "No user_id provided in the request"}), 400
+
+        #access the user id
+        user_id = request.args['user_id']
+
+        #identify the filenames of all the files that belong to user_id user
+        file_names = db.session.query(File.name).filter(File.user_id == user_id).all()
+        names = [file.name for file in file_names]
+
+        print(names)
+
+        #delete each file from supabase
+        for name in names:
+            supabase.storage.from_(supabase_bucket_name).remove([name])
+
+        #access the user id 
+        user_id = request.args['user_id']
+
+        #perform deletion on the file table
+        db.session.query(File).filter(File.user_id == user_id).delete()
+        db.session.commit()
+
+        return jsonify({"status": "successful"}), 200
+    
+    except Exception as e:
+        print("Error @ /user-delete-all-file ||", e)
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
     
 def register_blueprints(app):
     app.register_blueprint(auth_routes_bp)
