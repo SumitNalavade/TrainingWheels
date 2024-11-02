@@ -7,8 +7,12 @@ const StudioPage: React.FC = () => {
 
     return (
         <>
+            {/* <div className="flex h-screen"> */}
+            {/* <div className="w-[30%] bg-[#FBF7FF] p-4 flex"> */}
+
             <div>
                 <Sidebar />
+
             </div>
 
             <p>{user?.name}</p>

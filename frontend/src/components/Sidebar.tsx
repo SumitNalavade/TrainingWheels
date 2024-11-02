@@ -88,6 +88,7 @@ export default function Sidebar() {
                         </div>
                     </FileUploader>
                 </div>
+
             ) : (
                 <div className="w-[7%] bg-gray-100 p-4 flex flex-col min-h-0">
                     <div className="flex justify-between items-center mb-4 p-2">
@@ -97,6 +98,29 @@ export default function Sidebar() {
                     </div>
                 </div>
             )}
+
+            <div className="w-3/4 p-6 flex flex-col justify-between">
+                <div className="space-y-4 overflow-y-auto">
+                    <div className="flex justify-start">
+                        <div className="bg-gray-200 p-3 rounded-lg max-w-xs text-sm">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        </div>
+                    </div>
+                    <div className="flex justify-end">
+                        <div className="bg-purple-100 p-3 rounded-lg max-w-xs text-sm">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex items-center mt-4 border-t border-gray-200 pt-4">
+                    <input
+                        type="text"
+                        placeholder="Type your message here..."
+                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none text-sm"
+                    />
+                </div>
+            </div>
         </div>
     );
 }
