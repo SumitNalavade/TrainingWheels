@@ -1,10 +1,11 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.types import UserDefinedType
+from flask_bcrypt import Bcrypt
 import uuid
 
 db = SQLAlchemy()
-
+bcrypt = Bcrypt()
 class Vector(UserDefinedType):
     def get_col_spec(self):
         return "VECTOR(1536)"

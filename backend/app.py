@@ -3,7 +3,6 @@ from flask import Flask, request
 from flask_cors import CORS
 import langchain
 from dotenv import load_dotenv
-import psycopg2 
 
 from database.database import db
 
@@ -11,6 +10,9 @@ from chains.conversational_retrieval_chain_with_memory import build_conversation
 from langchain.chat_models import ChatOpenAI
 from database.pg_vector_store import build_pg_vector_store
 from embeddings.openai_embeddings import openai_embeddings
+
+from routes.auth_routes import auth_routes_bp
+from routes.processing_routes import processing_routes_bp
 
 load_dotenv()
 
@@ -46,13 +48,11 @@ retrieval_qa_chain = build_conversational_retrieval_chain_with_memory(
 def hello_world():
     return "<p>Hello, World!</p>"
 
-@app.route("/test")
-def test():
-    result = retrieval_qa_chain.run("what will i feel during ovulation?")
+def register_blueprints(app):
+    app.register_blueprint(auth_routes_bp)
+    app.register_blueprint(processing_routes_bp)
 
-    print(result)
-
-    return "success"
+register_blueprints(app)
 
 if __name__ == '__main__':
     app.run(debug=True)
