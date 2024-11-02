@@ -1,13 +1,29 @@
-import React from "react";
+import React, { FormEvent, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+import useAppStore from "../stores/useAppStore";
 
 const SignInPage: React.FC = () => {
     const navigate = useNavigate();
-    const handleSignIn = (event: React.MouseEvent) => {
+    
+    const setUser = useAppStore(state => state.setUser);
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    
+    const handleSignIn = async (event: FormEvent) => {
         event.preventDefault();
-        navigate("/studio")
+        
+        const user = (await axios.post("http://localhost:5000/signin", { email, password })).data;
+
+        if(user) {
+            setUser(user);
+            navigate("/studio");
+        }
     }
+    
     return (
         <div className="flex h-screen">
             <div className="w-5/12 bg-[#FBF7FF] flex flex-col justify-center items-center text-center">
@@ -16,7 +32,7 @@ const SignInPage: React.FC = () => {
                     <br />
                     <span>Amplified</span>
                 </h1>
-                <p className="text-lg font-semibold mb-12 mt-12 text-[#656D7A]">
+                <p className="text-2xl font-semibold mb-12 mt-6 text-[#656D7A]">
                     Content-first AI that gives you peace of mind
                 </p>
 
@@ -27,12 +43,13 @@ const SignInPage: React.FC = () => {
                     <FcGoogle className="mr-2 text-lg" /> Sign In with Google
                 </button>
 
-                <form className="w-2/3 flex flex-col items-center mt-8">
+                <form className="w-2/3 flex flex-col items-center mt-8" onSubmit={handleSignIn}>
                     <div className="w-full mb-4">
-                        <p className="mb-1 text-left text-xs font-sans font-semibold">Email or name</p>
+                        <p className="mb-1 text-left text-xs font-sans font-semibold">Email</p>
                         <input
                             type="email"
                             placeholder="abhiramiruku@utexas.edu"
+                            onChange={(evt) => setEmail(evt.target.value)}
                             className="w-full p-2 mb-4 border border-gray-300 rounded-lg"
                         />
                     </div>
@@ -41,6 +58,7 @@ const SignInPage: React.FC = () => {
                         <input 
                             type="password"
                             placeholder="hookem26"
+                            onChange={(evt) => setPassword(evt.target.value)}
                             className="w-full p-2 mb-4 border border-gray-300 rounded-lg" />
                     </div>
                     <button
