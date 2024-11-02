@@ -1,8 +1,11 @@
 import React from "react";
+import Sidebar from '../components/Sidebar';
 
 const StudioPage: React.FC = () => {
     return (
-        <h1>Studio Page</h1>
+        <div>
+            <Sidebar />
+        </div>
     )
 }
 
