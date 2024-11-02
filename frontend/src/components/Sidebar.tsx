@@ -1,6 +1,6 @@
 import React from "react";
 import { FileUploader } from "react-drag-drop-files";
-import { CiFileOn } from "react-icons/ci";
+import { BsFiletypePdf } from "react-icons/bs";
 import { CiImageOn } from "react-icons/ci";
 import { BsFillImageFill } from "react-icons/bs";
 import { FiUpload } from "react-icons/fi";
@@ -23,14 +23,14 @@ const Sidebar: React.FC<SidebarProps> = ({ files, onFileChange, showSidebar, tog
             case "image/jpeg":
             case "image/jpg":
             case "image/png":
-                return <CiImageOn className="text-7xl" />;
+                return <CiImageOn className="text-5xl" />;
             case "video/quicktime":
             case "video/mp4":
-                return <BsCameraVideo className="text-7xl" />;
+                return <BsCameraVideo className="text-5xl" />;
             case "application/pdf":
-                return <CiFileOn className="text-7xl" />;
+                return <BsFiletypePdf className="text-5xl" />;
             default:
-                return <BsFillImageFill className="text-7xl" />;
+                return <BsFillImageFill className="text-5xl" />;
         }
     };
 
@@ -39,18 +39,18 @@ const Sidebar: React.FC<SidebarProps> = ({ files, onFileChange, showSidebar, tog
             {showSidebar ? (
                 <div className="w-[30%] bg-[#FBF7FF] p-4 flex flex-col min-h-0">
                     <div className="flex justify-between items-center mb-4 p-2">
-                        <FiSidebar size={40} onClick={toggleSidebar} className="cursor-pointer" />
-                        <FaPenNib size={40} />
+                        <FiSidebar size={30} onClick={toggleSidebar} className="cursor-pointer" />
+                        <FaPenNib size={30} />
                     </div>
                     <div className="mb-4">
                         <input
                             type="text"
                             placeholder="Search Content..."
-                            className="w-full p-4 text-xl border rounded-lg focus:outline-none text-gray-700 placeholder-gray-500 bg-[#E0E0E0]"
+                            className="w-full p-2 text-md border rounded-lg focus:outline-none text-gray-700 placeholder-gray-500 bg-[#E0E0E0]"
                         />
                     </div>
                     <div className="flex-grow overflow-y-auto p-4">
-                        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-4">
                             {files.map((file, index) => (
                                 <div key={index} className="flex flex-col items-center space-y-2">
                                     {getFileIcon(file)}
@@ -64,15 +64,19 @@ const Sidebar: React.FC<SidebarProps> = ({ files, onFileChange, showSidebar, tog
                         name="file"
                         types={fileTypes}
                     >
-                        <div className="mt-4 p-4 border-gray-300 rounded-lg text-center cursor-pointer text-xl text-gray-600 bg-[#E0E0E0] hover:bg-gray-300 flex justify-center space-x-2 transition-colors duration-200">
-                            <FiUpload size={26} />
-                            <span>Upload Content</span>
+                        <div className="flex justify-center">
+                            <div className="flex justify-center mt-4 w-3/4 p-3 border-gray-300 rounded-lg text-center cursor-pointer text-lg text-gray-600 bg-[#E0E0E0] hover:bg-gray-300 space-x-2 transition-colors duration-200">
+                                <FiUpload size={26} />
+                                <span className="hidden lg:inline">Upload Content</span>
+                            </div>
                         </div>
                     </FileUploader>
                 </div>
             ) : (
-                <div className="w-[7%] bg-gray-100 p-4 flex flex-col min-h-0">
-                    <FiSidebar size={40} onClick={toggleSidebar} className="cursor-pointer" />
+                <div className="w-[6%] bg-[#FBF7FF] p-4 flex flex-col min-h-0">
+                    <div className="flex justify-between items-center mb-4 p-2">
+                        <FiSidebar size={30} onClick={toggleSidebar} className="cursor-pointer" />
+                    </div>
                 </div>
             )}
         </>
