@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import useAppStore from "../stores/useAppStore";
 import Sidebar from '../components/Sidebar';
-import mascot from "../assets/mascot.png";
 import { FiUpload } from "react-icons/fi";
 import { BsSend } from "react-icons/bs";
 
+// @ts-ignore
+import mascot from "../assets/mascot.png";
 interface ResponseData {
     type: string,
     data: {
@@ -21,13 +22,29 @@ interface ResponseData {
     }
 }
 
-const StudioPage: React.FC = () => {
+import axios from "axios";
 
+const StudioPage: React.FC = () => {
     const [files, setFiles] = useState<File[]>([]);
     const [showSidebar, setShowSidebar] = useState(true);
 
-    const handleFileChange = (file: File) => {
+    const user = useAppStore(state => state.user);
+
+    const handleFileChange = async (file: File) => {
         setFiles((prevFiles) => [...prevFiles, file]);
+
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await axios.post(`http://localhost:5000/upload?user_id=${user?.id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+        } catch {
+            alert("An error occured, please try again later")
+        }
     };
 
     const toggleSidebar = () => setShowSidebar(!showSidebar);
@@ -113,7 +130,7 @@ const StudioPage: React.FC = () => {
 
                 <div className="flex justify-between items-center mt-2 mb-24">
                     <img src={mascot}></img>
-                    <div className="flex p-3 rounded-lg bg-purple-200 space-x-4 hover:bg-purple-300 cursor-pointer">
+                    <div className="flex p-3 rounded-lg space-x-4 cursor-pointer">
                         <span className="text-md">
                             Share
                         </span>
