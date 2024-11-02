@@ -42,7 +42,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
     if (!showSidebar) {
         return (
-            <div className="w-16 bg-white border-r border-gray-200 p-4 flex flex-col">
+            <div className="w-16 bg-[#FBF7FF] border-r border-gray-200 p-4 flex flex-col">
                 <button
                     onClick={toggleSidebar}
                     className="p-2 rounded-lg transition-colors duration-200"
