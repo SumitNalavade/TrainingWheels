@@ -8,6 +8,8 @@ import { ImEmbed2 } from "react-icons/im";
 
 // @ts-ignore
 import mascot from "../assets/mascot.png";
+import axios from "axios";
+
 interface ResponseData {
     type: string,
     data: {
@@ -24,39 +26,60 @@ interface ResponseData {
     }
 }
 
-import axios from "axios";
+interface IFile extends File {
+    url: string
+}
+
+interface FileData {
+    name: string;
+    url: string;
+    type: string;
+    // Add other properties as needed
+}
 
 const StudioPage: React.FC = () => {
-    const [files, setFiles] = useState<File[]>([]);
+    const [files, setFiles] = useState<IFile[]>([]);
     const [showSidebar, setShowSidebar] = useState(true);
-
+    const [messages, setMessages] = useState<ResponseData[]>([]);
+    const [inputMessage, setInputMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
     const user = useAppStore(state => state.user);
 
-    const handleFileChange = async (file: File) => {
-        setFiles((prevFiles) => [...prevFiles, file]);
-
+    const fetchPreviousFiles = async () => {
         try {
+            setIsLoading(true);
+            const response = await axios.get(`http://localhost:5000/get_file?user_id=${user?.id}`);
+            const previousFiles = response.data;
+            
+            setFiles(previousFiles);
+        } catch (error) {
+            console.error("Error fetching previous files:", error);
+            alert("Failed to load previous files");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleFileChange = async (file: File) => {
+        try {
+            setFiles((prevFiles) => [...prevFiles, file as IFile]);
+
             const formData = new FormData();
             formData.append('file', file);
 
-            const response = await axios.post(`http://localhost:5000/upload?user_id=${user?.id}`, formData, {
+            await axios.post(`http://localhost:5000/upload?user_id=${user?.id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-        } catch {
-            alert("An error occured, please try again later")
+        } catch (error) {
+            console.error("Error uploading file:", error);
+            alert("An error occurred while uploading the file");
         }
     };
 
-    const toggleSidebar = () => setShowSidebar(!showSidebar);
-
-    const [messages, setMessages] = useState<ResponseData[]>([]);
-    const [inputMessage, setInputMessage] = useState("");
-
     const handleSendMessage = () => {
         if (inputMessage.trim()) {
-
             const newMessage: ResponseData = {
                 type: "human",
                 data: {
@@ -68,16 +91,12 @@ const StudioPage: React.FC = () => {
                     id: null,
                     example: false
                 }
-            }
+            };
 
             setMessages((prevMessages) => [...prevMessages, newMessage]);
             setInputMessage("");
         }
     };
-
-    useEffect(() => {
-        console.log("Updated messages:", messages);
-    }, [messages]);
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
@@ -85,6 +104,14 @@ const StudioPage: React.FC = () => {
         }
     };
 
+    // Fetch previous files on component mount
+    useEffect(() => {
+        if (user?.id) {
+            fetchPreviousFiles();
+        }
+    }, [user?.id]);
+
+    // Load sample messages
     useEffect(() => {
         const sampleMessages: ResponseData[] = [
             {
@@ -128,6 +155,7 @@ const StudioPage: React.FC = () => {
     const closeShareModal = () => {
         setShowModal(false);
     };
+    const toggleSidebar = () => setShowSidebar(!showSidebar);
 
     return (
         <div className="flex h-screen">
@@ -136,20 +164,15 @@ const StudioPage: React.FC = () => {
                 onFileChange={handleFileChange}
                 showSidebar={showSidebar}
                 toggleSidebar={toggleSidebar}
+                isLoading={isLoading}
             />
 
             <div className="w-3/4 p-1 pl-10 pr-10 flex flex-col justify-between">
-
-                <div
-                    className="flex justify-between items-center mt-2 mb-24"
-                    onClick={showShareModal}
-                >
-                    <img src={mascot} alt="Mascot" className="w-15 h-15" />
-                    <div className="flex p-3 rounded-lg bg-purple-200 space-x-4 hover:bg-purple-300 cursor-pointer">
-                        <span className="text-md">
-                            Embed
-                        </span>
-                        <ImEmbed2 size={24} />
+                <div className="flex justify-between items-center mt-2 mb-24">
+                    <img src={mascot} alt="Mascot" />
+                    <div className="flex p-3 rounded-lg space-x-4 cursor-pointer">
+                        <span className="text-md">Share</span>
+                        <FiUpload size={20} />
                     </div>
                 </div>
                 {showModal && (
@@ -185,13 +208,16 @@ const StudioPage: React.FC = () => {
                         onChange={(e) => setInputMessage(e.target.value)}
                         onKeyDown={handleKeyPress}
                     />
-                    <button onClick={handleSendMessage} className="ml-2 p-2 text-purple-500 hover:text-purple-700">
+                    <button 
+                        onClick={handleSendMessage} 
+                        className="ml-2 p-2 text-purple-500 hover:text-purple-700"
+                    >
                         <BsSend size={20} />
                     </button>
                 </div>
             </div>
         </div>
     );
-}
+};
 
 export default StudioPage;

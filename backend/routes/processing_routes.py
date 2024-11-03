@@ -163,6 +163,7 @@ def add_file():
         # Get file type and determine content-type
         file_type = file.filename.rsplit('.', 1)[-1].lower()
         content_type = file.content_type or 'application/octet-stream'
+        file_content = file.read()
 
         if (content_type == 'image/png'):
             upload_image(user_id, file)
@@ -170,27 +171,20 @@ def add_file():
             upload_pdf(user_id, file)
         else:
             return jsonify({"error": "File format not supported"}), 400
+        
+        response = (
+            supabase.storage
+            .from_(supabase_bucket_name)
+            .upload(file.filename, file_content)
+        )
 
-        # Create a temporary file to handle the upload
-        with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-            file.save(temp_file.name)
+        #retreive the url of the file from the supabase bucket
+        public_url = supabase.storage.from_(supabase_bucket_name).get_public_url(file.filename)
+        file_type = file.filename.rsplit('.', 1)[-1].lower() 
+        print("File type:", file_type)
 
-            # Upload to Supabase with proper content-type
-            with open(temp_file.name, 'rb') as f:
-                response = supabase.storage.from_(supabase_bucket_name).upload(
-                    file=f,
-                    path=file.filename,
-                    file_options={"content-type": content_type}
-                )
 
-        # Clean up temporary file
-        os.unlink(temp_file.name)
-
-        # Retrieve the public URL
-        public_url = supabase.storage.from_(
-            supabase_bucket_name).get_public_url(file.filename)
-
-        # Add entry to the files table
+        #add an entry into the files table
         new_file = File(
             url=public_url,
             name=file.filename,
@@ -203,10 +197,7 @@ def add_file():
         db.session.commit()
 
         print("/user-add-file successfully added a file to the database")
-        return jsonify({
-            "status": "successful",
-            "file_id": new_file.id
-        }), 200
+        return jsonify({"status": "successful", "file_id": new_file.id}), 200
 
     except Exception as e:
         print("Error @ /user-add-file ||", e)
@@ -234,9 +225,10 @@ def get_file():
         user_id = request.args['user_id']
 
         # retrieve all associated URLs and file names and turn it into a list of dicts
-        files = db.session.query(File.url, File.name).filter(
+        files = db.session.query(File.url, File.name, File.type).filter(
             File.user_id == user_id).all()
-        results = [{"url": file.url, "name": file.name} for file in files]
+        
+        results = [{"url": file.url, "name": file.name, "type": file.type} for file in files]
 
         return jsonify(results), 200
 
