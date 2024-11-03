@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router";
 import useAppStore from "../stores/useAppStore";
 import Sidebar from '../components/Sidebar';
 import { FiUpload } from "react-icons/fi";
@@ -66,6 +67,8 @@ const StudioPage: React.FC = () => {
     const user = useAppStore(state => state.user);
 
     const messagesEndRef = useRef(null);
+
+    const navigate = useNavigate();
 
     const fetchPreviousFiles = async () => {
         try {
@@ -150,6 +153,10 @@ const StudioPage: React.FC = () => {
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
+
+    if(!user) {
+        navigate("/signup");
+    }
 
     return (
         <div className="h-screen flex flex-col">
