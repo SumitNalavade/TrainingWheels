@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import useAppStore from "../stores/useAppStore";
 import { signInWithGoogle } from "../services/authService"; 
@@ -59,7 +59,7 @@ const SignInPage: React.FC = () => {
 
                 <button
                     type="button"
-                    className="w-2/3 p-2 bg-[#D1D1D1] text-white rounded-lg border border-transparent hover:border-black flex items-center justify-center"
+                    className="w-2/3 p-2 bg-[#837FFC] text-white rounded-lg border border-transparent flex items-center justify-center"
                     onClick={handleGoogleSignIn}
                 >
                     <FcGoogle className="mr-2 text-lg" /> Sign In with Google
@@ -86,10 +86,17 @@ const SignInPage: React.FC = () => {
                     </div>
                     <button
                         type="submit"
-                        className="w-full p-2 bg-[#D1D1D1] text-white rounded-lg border border-transparent hover:border-black"
+                        className="w-full p-2 bg-[#837FFC] text-white rounded-lg border border-transparent"
                     >
                         Sign In
                     </button>
+
+                    <p className="mt-6 text-sm text-gray-600">
+                        Don't have an account?{" "}
+                        <Link to="/signup" className="text-[#837FFC] hover:underline font-semibold">
+                            Sign up
+                        </Link>
+                    </p>
                 </form>
             </div>
             
