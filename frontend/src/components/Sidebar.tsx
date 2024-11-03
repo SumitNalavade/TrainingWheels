@@ -27,7 +27,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     toggleSidebar,
 }) => {
     const getFileIcon = (file: File) => {
-        const iconClass = "text-4xl text-[#837FFC]";
+        const iconClass = "text-4xl text-gray-500";
 
         switch (file.type) {
             case "jpeg":
@@ -46,7 +46,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
     if (!showSidebar) {
         return (
-            <div className="w-16 bg-gray-200 border-r border-gray-100 p-4 flex flex-col">
+            <div className="w-16 bg-[#FBF7FF] border-r border-gray-100 p-4 flex flex-col">
                 <button
                     onClick={toggleSidebar}
                     className="p-2 rounded-lg text-gray-400 hover:text-gray-600 transition-colors duration-200"
@@ -58,7 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
 
     return (
-        <div className="w-96 bg-gray-200 border-r border-gray-100 flex flex-col h-full">
+        <div className="w-96 bg-[#FBF7FF] border-r border-gray-100 flex flex-col h-full">
             <div className="p-4 flex items-center">
                 <button
                     onClick={toggleSidebar}
@@ -105,7 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                             <div className="bg-white border border-gray-100 rounded-lg p-4 hover:shadow-md transition-all duration-200">
                                 <div className="flex flex-col items-center">
                                     {getFileIcon(file)}
-                                    <span className="mt-2 text-sm text-[#837FFC] text-center truncate w-full">
+                                    <span className="mt-2 text-sm text-gray-500 text-center truncate w-full">
                                         {file.name}
                                     </span>
                                 </div>
