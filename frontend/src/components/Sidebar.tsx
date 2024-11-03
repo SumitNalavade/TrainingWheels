@@ -83,47 +83,45 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
 
             <div className="flex-1 overflow-y-auto pl-4 pr-4 pb-4">
+                <div className="border-2 border-dashed border-[#837FFC] rounded-lg p-6">
+                    <FileUploader
+                        handleChange={onFileChange}
+                        name="file"
+                        hoverTitle=""
+                    >
+                        <div className="text-black text-center">
+                            <p className="text-lg">Drag and drop your file here</p>
+                            <p>or</p>
+                            <p className="font-semibold">Click to upload</p>
+                        </div>
+                    </FileUploader>
+                </div>
+
                 {isUploading ? (
                     <div className="flex items-center justify-center h-full">
                         <div className="loader">Loading...</div>
                     </div>
                 ) : (
-                    <>
-                        <FileUploader
-                            handleChange={onFileChange}
-                            name="file"
-                        >
-                        </FileUploader>
-                        <div className="h-full w-full border-dashed rounded-lg p-4">
-                            {files.length ? (
-                                <div className="grid grid-cols-2 gap-4 w-full">
-                                    {files.map((file, index) => (
-                                        <a
-                                            key={index}
-                                            href={file.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="m-1"
-                                        >
-                                            <div className="group flex flex-col items-center p-2 space-y-1 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200 cursor-pointer">
-                                                {getFileIcon(file)}
-                                                <span className="text-xs text-gray-600 text-center truncate w-full">
-                                                    {file.name}
-                                                </span>
-                                            </div>
-                                        </a>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="h-full flex items-center justify-center">
-                                    <div className="text-gray-500 text-center">
-                                        Drag and drop or upload.
+                    <div className="h-full w-full border-dashed rounded-lg p-4">
+                        <div className="grid grid-cols-2 gap-4 w-full">
+                            {files.map((file, index) => (
+                                <a
+                                    key={index}
+                                    href={file.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="m-1"
+                                >
+                                    <div className="group flex flex-col items-center p-2 space-y-1 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200 cursor-pointer">
+                                        {getFileIcon(file)}
+                                        <span className="text-xs text-gray-600 text-center truncate w-full">
+                                            {file.name}
+                                        </span>
                                     </div>
-                                </div>
-                            )}
-
+                                </a>
+                            ))}
                         </div>
-                    </>
+                    </div>
                 )}
             </div>
 
