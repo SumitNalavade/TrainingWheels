@@ -2,6 +2,7 @@ import React from "react";
 //@ts-ignore
 import mascot from "../assets/mascot.png";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 interface NavbarProps {
   noMargin?: boolean;
@@ -25,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ noMargin, purple }) => {
         } border-b`}
     >
       <div className="flex items-center">
-        <img src={mascot} alt="Mascot" className="h-12 w-auto" />
+        <Link to="/"> <img src={mascot} alt="Mascot" className="h-12 w-auto" /></Link>
       </div>
 
       <div className="text-xl font-semibold space-x-6">
