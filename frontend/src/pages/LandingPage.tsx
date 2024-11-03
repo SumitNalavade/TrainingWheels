@@ -10,6 +10,10 @@ import { GoDatabase } from "react-icons/go";
 import { PiBracketsAngleThin } from "react-icons/pi";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import VideoPlayer from "../components/VideoPlayer";
+
+import main_demo from "../assets/main_demo.mp4";
+import main_demo_2 from "../assets/main_demo_2.mp4";
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -49,8 +53,8 @@ const LandingPage: React.FC = () => {
               </button>
             </div>
           </div>
-          <div className="flex-1 flex items-center justify-center bg-gray-200 h-72 border-2 border-dashed border-gray-400 rounded-lg">
-            <p className="text-gray-500 text-lg">Demo Video Placeholder</p>
+          <div className="flex-1 h-72">
+            <VideoPlayer video={main_demo} />
           </div>
         </div>
       </div>
@@ -66,10 +70,8 @@ const LandingPage: React.FC = () => {
 
       <div className="flex-grow flex items-center justify-center px-10 mb-24">
         <div className="flex w-full max-w-6xl space-x-10">
-          <div className="flex-1 bg-gray-200 h-70 flex items-center justify-center border-2 border-dashed border-gray-400 rounded-lg">
-            <p className="text-gray-500 text-lg">
-              Demo Functionality Placeholder
-            </p>
+        <div className="flex-1 h-72">
+            <VideoPlayer video={main_demo_2} />
           </div>
           <div className="flex-1 space-y-16">
             <div className="flex items-center space-x-4">

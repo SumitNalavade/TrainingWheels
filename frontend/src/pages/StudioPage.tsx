@@ -17,6 +17,7 @@ import EmbedPopup from "../components/EmbedPopup";
 import mascot from "../assets/mascot.png";
 import axios from "axios";
 import { IoShareSocialOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 interface ResponseData {
     type: string,
@@ -66,7 +67,7 @@ const StudioPage: React.FC = () => {
 
     const user = useAppStore(state => state.user);
 
-    const messagesEndRef = useRef(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const navigate = useNavigate();
 
@@ -75,6 +76,8 @@ const StudioPage: React.FC = () => {
             setIsLoading(true);
             const response = await axios.get(`http://127.0.0.1:5000/get_file?user_id=${user?.id}`);
             const previousFiles = response.data;
+
+            console.log(previousFiles);
 
             setFiles(previousFiles);
         } catch (error) {
@@ -167,7 +170,7 @@ const StudioPage: React.FC = () => {
         <div className="h-screen flex flex-col">
             <nav className="flex items-center justify-between px-6 py-4 bg-[#FBF7FF] border-b">
                 <div className="flex items-center">
-                    <img src={mascot} alt="Mascot" className="h-12 w-auto" />
+                    <Link to="/"> <img src={mascot} alt="Mascot" className="h-12 w-auto" /></Link>
                 </div>
                 <div className="text-xl font-semibold space-x-6">
                     <button className="text-sm antialiased bg-[#F1F0FF] px-2 py-2 rounded-lg">
@@ -194,7 +197,7 @@ const StudioPage: React.FC = () => {
                     {showModal && (
                         <EmbedPopup
                             onClose={closeShareModal}
-                            embedCode={`<iframe src="http://127.0.0.1:5000/chat/${user?.id}" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>`}
+                            embedCode={`<iframe src="http://localhost:5173/chat/${user?.id}" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>`}
                         />
                     )}
 

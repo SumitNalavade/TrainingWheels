@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { BsSend } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
 import { ImEmbed2 } from "react-icons/im";
@@ -28,7 +28,7 @@ interface ResponseData {
 
 const Chat: React.FC = () => {
     const { id: user_id } = useParams(); // Get the dynamic ID
-    
+
     const [messages, setMessages] = useState<ResponseData[]>([{
         type: "ai",
         data: {
@@ -82,7 +82,7 @@ const Chat: React.FC = () => {
         setShowModal(false);
     };
 
-    const messagesEndRef = useRef(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -96,7 +96,8 @@ const Chat: React.FC = () => {
         <div className="h-screen flex flex-col">
             <nav className="flex items-center justify-between px-6 py-4 bg-[#FBF7FF] border-b">
                 <div className="flex items-center">
-                    <img src={mascot} alt="Mascot" className="h-12 w-auto" />
+                    <Link to="/"> <img src={mascot} alt="Mascot" className="h-12 w-auto" /></Link>
+
                 </div>
                 <div className="text-xl font-semibold space-x-6">
                     <button onClick={showShareModal} className="rounded-full px-5 py-2 bg-[#837FFC] text-sm text-[#FFFFFF] border border-transparent  hover:border-[#837FFC] hover:bg-indigo-600 antialiased inline-flex items-center gap-2">
@@ -104,14 +105,14 @@ const Chat: React.FC = () => {
                     </button>
                 </div>
             </nav>
-            
+
             <div className="flex-1 flex min-h-0">
                 <div className="flex-1 flex flex-col p-1 pl-12">
                     <div className="flex-1 min-h-0 space-y-8 flex flex-col justify-end" ref={messagesEndRef}>
                         <div className="overflow-y-auto">
                             {messages.map((message, index) => (
                                 <div key={index} className={`flex ${message.type === "human" ? "justify-end" : "justify-start"} mb-8`}>
-                                    <div className={`p-3 rounded-lg max-w-xs text-sm ${message.type === "human" ? "bg-[#837FFC]" : "bg-gray-100"}`}>
+                                    <div className={`p-3 rounded-lg max-w-xs text-sm ${message.type === "human" ? "bg-[#FBF7FF] text-gray-500 mr-12" : "text-gray-500 bg-gray-100"}`}>
                                         {message.data.content}
                                     </div>
                                 </div>
