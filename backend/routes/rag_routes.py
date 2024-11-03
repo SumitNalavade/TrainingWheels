@@ -1,11 +1,12 @@
 import os
 from flask import Blueprint, request, jsonify
-import tempfile
 
 from embeddings.openai_embeddings import openai_embeddings
 from database.pg_vector_store import build_pg_vector_store
 from chains.conversational_retrieval_chain_with_memory import build_conversational_retrieval_chain_with_memory
 from langchain.chat_models import ChatOpenAI
+
+from database.database import db, File
 
 rag_routes_bp = Blueprint('rag_routes', __name__)
 
