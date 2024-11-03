@@ -5,7 +5,7 @@ import { FiUpload } from "react-icons/fi";
 import { BsSend } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
 import { ImEmbed2 } from "react-icons/im";
-import Chat from "../components/Chat";
+import Chat from "./Chat";
 import { v4 as uuid } from "uuid";
 
 // @ts-ignore
@@ -63,9 +63,9 @@ const StudioPage: React.FC = () => {
     const fetchPreviousFiles = async () => {
         try {
             setIsLoading(true);
-            const response = await axios.get(`http://localhost:5000/get_file?user_id=${user?.id}`);
+            const response = await axios.get(`http://127.0.0.1:5000/get_file?user_id=${user?.id}`);
             const previousFiles = response.data;
-            
+
             setFiles(previousFiles);
         } catch (error) {
             console.error("Error fetching previous files:", error);
@@ -82,7 +82,7 @@ const StudioPage: React.FC = () => {
             const formData = new FormData();
             formData.append('file', file);
 
-            await axios.post(`http://localhost:5000/upload?user_id=${user?.id}`, formData, {
+            await axios.post(`http://127.0.0.1:5000/upload?user_id=${user?.id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -109,7 +109,7 @@ const StudioPage: React.FC = () => {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
         setInputMessage("");
 
-        const response = (await axios.post("http://localhost:5000/search", { user_id: user?.id, query: inputMessage, conversation_id: conversationId })).data
+        const response = (await axios.post("http://127.0.0.1:5000/search", { user_id: user?.id, query: inputMessage, conversation_id: conversationId })).data
 
         setMessages((prevMessages) => [...prevMessages, response]);
     };
@@ -148,12 +148,17 @@ const StudioPage: React.FC = () => {
                 isLoading={isLoading}
             />
 
-            <div className="w-3/4 p-1 pl-10 pr-10 flex flex-col justify-between">
-                <div className="flex justify-between items-center mt-2 mb-24">
+            <div className="w-3/4 p-1 pl-12 flex flex-col justify-between">
+                <div
+                    className="flex justify-between items-center mt-2 mb-24"
+                    onClick={showShareModal}
+                >
                     <img src={mascot} alt="Mascot" />
-                    <div className="flex p-3 rounded-lg space-x-4 cursor-pointer">
-                        <span className="text-md">Share</span>
-                        <FiUpload size={20} />
+                    <div className="flex p-3 rounded-lg bg-purple-200 space-x-4 hover:bg-purple-300 cursor-pointer">
+                        <span className="text-md">
+                            Embed
+                        </span>
+                        <ImEmbed2 size={24} />
                     </div>
                 </div>
                 {showModal && (
@@ -165,11 +170,10 @@ const StudioPage: React.FC = () => {
                                     <AiOutlineClose size={20} />
                                 </button>
                             </div>
-                            <p> {'<iframe src="/studio" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>'}</p>
+                            <p> {'<iframe src="/chat" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>'}</p>
                         </div>
                     </div>
                 )}
-
                 <div className="space-y-8 overflow-y-auto h-full">
                     {messages.map((message, index) => (
                         <div key={index} className={`flex ${message.type === "human" ? "justify-end" : "justify-start"}`}>
@@ -189,8 +193,8 @@ const StudioPage: React.FC = () => {
                         onChange={(e) => setInputMessage(e.target.value)}
                         onKeyDown={handleKeyPress}
                     />
-                    <button 
-                        onClick={handleSendMessage} 
+                    <button
+                        onClick={handleSendMessage}
                         className="ml-2 p-2 text-purple-500 hover:text-purple-700"
                     >
                         <BsSend size={20} />
