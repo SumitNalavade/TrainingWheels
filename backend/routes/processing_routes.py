@@ -13,6 +13,9 @@ from pdf2image import convert_from_path
 from PIL import Image
 import pytesseract
 
+import speech_recognition as sr
+from moviepy.editor import VideoFileClip
+
 from database.database import db, File
 
 processing_routes_bp = Blueprint('processing_routes', __name__)
@@ -134,6 +137,103 @@ def upload_image(user_id, file):
         except Exception as cleanup_error:
             print(
                 f"Error cleaning up temporary file {tmp_path}: {cleanup_error}")
+            
+def upload_video(user_id: str, file):
+    '''
+    Transcribes an uploaded video file to text and loads the transcription into a vector database.
+    Creates temporary files for processing, performs speech-to-text conversion, and stores
+    vectorized embeddings in PGVector database.
+    
+    Parameters:
+    user_id (str): Unique identifier for the user uploading the file
+    file: File object from the upload request
+    
+    Note: This function creates temporary files which are cleaned up after processing.
+    Transcription relies on Google Speech Recognition API and OpenAI embeddings which
+    may have associated costs.
+    '''
+    recognizer = sr.Recognizer()
+    output_folder = f'transcribed-files/{user_id}'
+    
+    # Initialize text splitter for document chunking
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=200,
+        chunk_overlap=0
+    )
+    
+    # Initialize vector store
+    vector_store = PGVector(
+        embeddings=openai_embeddings,
+        collection_name=user_id,
+        connection=database_uri,
+        use_jsonb=True,
+    )
+    
+    # Ensure output folder exists
+    os.makedirs(output_folder, exist_ok=True)
+    
+    # Create temporary video file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1]) as tmp_video:
+        tmp_video.write(file.read())
+        video_path = tmp_video.name
+        
+        try:
+            # Create temporary audio file
+            with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as tmp_audio:
+                temp_audio_path = tmp_audio.name
+                
+                try:
+                    # Extract audio from video
+                    video = VideoFileClip(video_path)
+                    video.audio.write_audiofile(temp_audio_path)
+                    
+                    # Perform transcription
+                    with sr.AudioFile(temp_audio_path) as source:
+                        audio = recognizer.record(source)
+                        try:
+                            text = recognizer.recognize_google(audio)
+                        except sr.UnknownValueError:
+                            text = "Could not understand audio"
+                            # Log failed transcription
+                            with open(f'transcribed-err/{user_id}.txt', 'a') as txt_err_file:
+                                txt_err_file.write(file.filename + '\n')
+                            raise Exception("Could not understand audio")
+                        except sr.RequestError as e:
+                            text = f"Error with the request: {e}"
+                            raise
+                    
+                    # Save transcription
+                    txt_filename = os.path.splitext(file.filename)[0] + '.txt'
+                    txt_path = os.path.join(output_folder, txt_filename)
+                    with open(txt_path, 'w') as txt_file:
+                        txt_file.write(text)
+                    
+                    # Create document chunks and add to vector store
+                    docs = text_splitter.create_documents([text], metadatas=[{"source": file.filename}])
+                    vector_store.add_documents(docs)
+                    
+                    print(f"Successfully processed and uploaded {file.filename}")
+                    return txt_path
+                    
+                finally:
+                    # Cleanup: Close video file and remove temporary files
+                    if 'video' in locals():
+                        video.close()
+                    try:
+                        os.remove(temp_audio_path)
+                    except Exception as cleanup_error:
+                        print(f"Error cleaning up temporary audio file: {cleanup_error}")
+        
+        except Exception as e:
+            print(f"Error processing file {file.filename}: {e}")
+            raise
+            
+        finally:
+            # Ensure the temporary video file is deleted
+            try:
+                os.remove(video_path)
+            except Exception as cleanup_error:
+                print(f"Error cleaning up temporary video file: {cleanup_error}")
 
 
 @processing_routes_bp.route("/upload", methods=["POST"])
@@ -168,6 +268,9 @@ def add_file():
             upload_image(user_id, file)
         elif (content_type == 'application/pdf'):
             upload_pdf(user_id, file)
+        elif(content_type == 'video/mp4'):
+            upload_video(user_id, file)
+            
         else:
             return jsonify({"error": "File format not supported"}), 400
 

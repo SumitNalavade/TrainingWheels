@@ -105,7 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                             <div className="bg-white border border-gray-100 rounded-lg p-4 hover:shadow-md transition-all duration-200">
                                 <div className="flex flex-col items-center">
                                     {getFileIcon(file)}
-                                    <span className="mt-2 text-sm text-gray-600 text-center truncate w-full">
+                                    <span className="mt-2 text-sm text-[#837FFC] text-center truncate w-full">
                                         {file.name}
                                     </span>
                                 </div>
