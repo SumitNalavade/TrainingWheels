@@ -8,7 +8,7 @@ import LandingPage from "./pages/LandingPage";
 import StudioPage from "./pages/StudioPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
-import Chat from "./components/Chat";
+import Chat from "./pages/Chat";
 
 const router = createBrowserRouter([
   {

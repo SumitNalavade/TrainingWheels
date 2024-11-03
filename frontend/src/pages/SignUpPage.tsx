@@ -17,7 +17,7 @@ const SignUpPage: React.FC = () => {
         event.preventDefault();
         
         try {
-            const response = await axios.post("http://localhost:5000/signup", { name, email, password });
+            const response = await axios.post("http://127.0.0.1:5000/signup", { name, email, password });
             const user = response.data;
 
             if (user) {
