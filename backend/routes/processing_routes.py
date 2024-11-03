@@ -12,11 +12,13 @@ from langchain_postgres.vectorstores import PGVector
 from pdf2image import convert_from_path
 from PIL import Image
 import pytesseract
+import re
 
 import speech_recognition as sr
 from moviepy.editor import VideoFileClip
 
-from database.database import db, File
+from database.database import db, File, User
+from custom_models.topic_modelling import predict
 
 processing_routes_bp = Blueprint('processing_routes', __name__)
 
@@ -435,3 +437,104 @@ def delete_all_file():
             "status": "error",
             "message": str(e)
         }), 500
+
+@processing_routes_bp.route("/get-key-topics", methods=["GET"])
+def get_key_topics():
+    '''
+    Given a user_id, get the n most major topics
+
+    Input: 
+        1. user_id : user id of the user 
+        2. num_topics (optional, default: 3) : the number of unqiue topics of user discussion to be identified
+        3. num_words (optional, default: 3) : the number of unique words of user discussion to be identified for each topic
+    '''
+
+    # input validation: user_id
+    if 'user_id' not in request.args:
+        return jsonify({"error": "No user_id provided in the request"}), 400
+
+    # access the user id
+    user_id = request.args['user_id']
+
+    if 'num_topics' in request.args:
+        # access the user id
+        num_topics = request.args['num_topics']
+    
+    if 'num_words' in request.args:
+        # access the user id
+        num_words = request.args['num_words']
+
+    
+    user = User.query.filter_by(id=user_id).first()
+    corpus = user.message_ids
+
+    predictions = predict(corpus, num_words, num_topics, model = 'lda')
+
+    extracted_strings = [quote for item in predictions for quote in re.findall(r'"(.*?)"', item[1])]
+
+    print(extracted_strings)
+
+    return jsonify(extracted_strings), 200
+
+
+@processing_routes_bp.route("/get-data-distribution", methods=["GET"])
+def get_data_distribution():
+    '''
+    Given a user_id, get a dictinary returning the distribution of data with regards to file type
+
+    Input: 
+        1. user_id : user id of the user 
+    '''
+
+    # input validation: user_id
+    if 'user_id' not in request.args:
+        return jsonify({"error": "No user_id provided in the request"}), 400
+
+    # access the user id
+    user_id = request.args['user_id']
+    user = User.query.filter_by(id=user_id).first()
+
+    files = db.session.query(File).filter(File.user_id == user_id).all()
+
+    # Initialize dictionary to count file types
+    type_dict = {}
+
+    # Count occurrences of each file type
+    for file in files:
+        if file.type in type_dict:
+            type_dict[file.type] += 1  # Increment the count if type exists
+        else:
+            type_dict[file.type] = 1    # Initialize the count to 1 for a new type
+
+    return jsonify(type_dict), 200  # Return the count of file types as JSON
+
+@processing_routes_bp.route("/get-data-distribution", methods=["GET"])
+def get_data_distribution():
+    '''
+    Given a user_id, get a dictinary returning the distribution of data with regards to file type
+
+    Input: 
+        1. user_id : user id of the user 
+    '''
+
+    # input validation: user_id
+    if 'user_id' not in request.args:
+        return jsonify({"error": "No user_id provided in the request"}), 400
+
+    # access the user id
+    user_id = request.args['user_id']
+    user = User.query.filter_by(id=user_id).first()
+
+    files = db.session.query(File).filter(File.user_id == user_id).all()
+
+    # Initialize dictionary to count file types
+    type_dict = {}
+
+    # Count occurrences of each file type
+    possible_file_types = ['png', 'pdf', 'jpg', 'jpeg', 'mp4', 'mov']
+    pftdict = {file_type: 0 for file_type in possible_file_types}
+
+    for file in files:
+        pftdict[file] += 1
+
+    return jsonify(pftdict), 200  

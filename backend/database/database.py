@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from sqlalchemy.types import UserDefinedType
 from flask_bcrypt import Bcrypt
 import uuid
@@ -21,6 +21,7 @@ class User(db.Model):
     name = db.Column(db.String(), nullable=False)
     email = db.Column(db.String(), nullable=False, unique=True)
     password = db.Column(db.String(), nullable=False)
+    message_ids = db.Column(ARRAY(db.String), nullable=True) 
 
     # Relationship to back-reference files associated with the user
     files = db.relationship('File', backref='user', lazy=True)

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { BsSend } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
 import { ImEmbed2 } from "react-icons/im";
@@ -61,7 +61,7 @@ const Chat: React.FC = () => {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
         setInputMessage("");
 
-        const response = (await axios.post("http://localhost:5000/search", { user_id: user_id, query: inputMessage, conversation_id: conversationId })).data
+        const response = (await axios.post("http://127.0.0.1:5000/search", { user_id: user_id, query: inputMessage, conversation_id: conversationId })).data
 
         setMessages((prevMessages) => [...prevMessages, response]);
     };
@@ -96,7 +96,8 @@ const Chat: React.FC = () => {
         <div className="h-screen flex flex-col">
             <nav className="flex items-center justify-between px-6 py-4 bg-[#FBF7FF] border-b">
                 <div className="flex items-center">
-                    <img src={mascot} alt="Mascot" className="h-12 w-auto" />
+                    <Link to="/"> <img src={mascot} alt="Mascot" className="h-12 w-auto" /></Link>
+
                 </div>
                 <div className="text-xl font-semibold space-x-6">
                     <button onClick={showShareModal} className="rounded-full px-5 py-2 bg-[#837FFC] text-sm text-[#FFFFFF] border border-transparent  hover:border-[#837FFC] hover:bg-indigo-600 antialiased inline-flex items-center gap-2">

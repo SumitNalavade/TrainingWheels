@@ -37,7 +37,7 @@ const EmbedPopup = ({ onClose, embedCode }) => {
           {/* Copy button */}
           <button
             onClick={copyToClipboard}
-            className="w-full bg-purple-600 text-white py-2.5 px-4 rounded-lg hover:bg-purple-700 transition-colors font-medium"
+            className="w-full bg-[#837FFC] text-white py-2.5 px-4 rounded-lg hover:bg-indigo-600 transition-colors font-medium"
           >
             {copied ? (
               <span className="flex items-center justify-center gap-2">

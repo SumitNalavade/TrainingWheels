@@ -7,6 +7,10 @@ import { signInWithGoogle } from "../services/authService";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
+import VideoPlayer from "../components/VideoPlayer";
+
+import main_demo from "../assets/main_demo.mp4";
+
 const SignInPage: React.FC = () => {
     const navigate = useNavigate();
     const setUser = useAppStore(state => state.setUser);
@@ -117,19 +121,9 @@ const SignInPage: React.FC = () => {
                     </form>
                 </div>
 
-                <div className="w-7/12 bg-[#ffffff] flex flex-col items-center justify-center gap-y-5">
-                    <div className="w-3/4 h-3/4 bg-gray-300 flex items-center justify-center rounded-lg" >
-                        <p className="text-gray-600 text-lg">{slides[currentIndex].content}</p>
-                    </div>
-
-                    <div className="flex mt-4 space-x-2">
-                        {slides.map((slide, index) => (
-                            <button
-                                key={slide.id}
-                                className={`w-2.5 h-2.5 rounded-full ${currentIndex === index ? 'bg-gray-600' : 'bg-gray-300'}`}
-                                onClick={() => handleDotClick(index)}
-                            />
-                        ))}
+                <div className="w-7/12 flex items-center justify-center p-8">
+                    <div className="w-full h-[600px]">
+                        <VideoPlayer video={main_demo} />
                     </div>
                 </div>
             </div>
