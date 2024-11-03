@@ -4,6 +4,8 @@ import Sidebar from '../components/Sidebar';
 import mascot from "../assets/mascot.png";
 import { FiUpload } from "react-icons/fi";
 import { BsSend } from "react-icons/bs";
+import { AiOutlineClose } from "react-icons/ai";
+import { ImEmbed2 } from "react-icons/im";
 
 interface ResponseData {
     type: string,
@@ -100,6 +102,16 @@ const StudioPage: React.FC = () => {
         setMessages(sampleMessages);
     }, []);
 
+    const [showModal, setShowModal] = useState(false);
+
+    const showShareModal = () => {
+        setShowModal(true);
+    };
+
+    const closeShareModal = () => {
+        setShowModal(false);
+    };
+
     return (
         <div className="flex h-screen">
             <Sidebar
@@ -111,15 +123,31 @@ const StudioPage: React.FC = () => {
 
             <div className="w-3/4 p-1 pl-10 pr-10 flex flex-col justify-between">
 
-                <div className="flex justify-between items-center mt-2 mb-24">
-                    <img src={mascot}></img>
+                <div
+                    className="flex justify-between items-center mt-2 mb-24"
+                    onClick={showShareModal}
+                >
+                    <img src={mascot} alt="Mascot" className="w-15 h-15" />
                     <div className="flex p-3 rounded-lg bg-purple-200 space-x-4 hover:bg-purple-300 cursor-pointer">
                         <span className="text-md">
-                            Share
+                            Embed
                         </span>
-                        <FiUpload size={20} />
+                        <ImEmbed2 size={24} />
                     </div>
                 </div>
+                {showModal && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-lg font-semibold">Embed This!</h2>
+                                <button onClick={closeShareModal}>
+                                    <AiOutlineClose size={20} />
+                                </button>
+                            </div>
+                            <p> {'<iframe src="/studio" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>'}</p>
+                        </div>
+                    </div>
+                )}
 
                 <div className="space-y-8 overflow-y-auto h-full">
                     {messages.map((message, index) => (
