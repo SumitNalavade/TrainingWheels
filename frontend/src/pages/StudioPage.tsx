@@ -76,6 +76,8 @@ const StudioPage: React.FC = () => {
             const response = await axios.get(`http://127.0.0.1:5000/get_file?user_id=${user?.id}`);
             const previousFiles = response.data;
 
+            console.log(previousFiles);
+
             setFiles(previousFiles);
         } catch (error) {
             console.error("Error fetching previous files:", error);

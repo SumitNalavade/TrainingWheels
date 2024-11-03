@@ -28,7 +28,7 @@ interface ResponseData {
 
 const Chat: React.FC = () => {
     const { id: user_id } = useParams(); // Get the dynamic ID
-    
+
     const [messages, setMessages] = useState<ResponseData[]>([{
         type: "ai",
         data: {
@@ -104,14 +104,14 @@ const Chat: React.FC = () => {
                     </button>
                 </div>
             </nav>
-            
+
             <div className="flex-1 flex min-h-0">
                 <div className="flex-1 flex flex-col p-1 pl-12">
                     <div className="flex-1 min-h-0 space-y-8 flex flex-col justify-end" ref={messagesEndRef}>
                         <div className="overflow-y-auto">
                             {messages.map((message, index) => (
                                 <div key={index} className={`flex ${message.type === "human" ? "justify-end" : "justify-start"} mb-8`}>
-                                    <div className={`p-3 rounded-lg max-w-xs text-sm ${message.type === "human" ? "bg-[#837FFC]" : "bg-gray-100"}`}>
+                                    <div className={`p-3 rounded-lg max-w-xs text-sm ${message.type === "human" ? "bg-[#FBF7FF] text-gray-500 mr-12" : "text-gray-500 bg-gray-100"}`}>
                                         {message.data.content}
                                     </div>
                                 </div>

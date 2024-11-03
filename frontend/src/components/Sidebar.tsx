@@ -39,6 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                 return <CiImageOn className={iconClass} />;
             case "video/quicktime":
             case "video/mp4":
+            case "mp4":
                 return <BsCameraVideo className={iconClass} />;
             case "application/pdf":
             case "pdf":
