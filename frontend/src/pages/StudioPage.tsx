@@ -194,7 +194,7 @@ const StudioPage: React.FC = () => {
                     {showModal && (
                         <EmbedPopup
                             onClose={closeShareModal}
-                            embedCode={`<iframe src="http://localhost:5173/chat/${user?.id}" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>`}
+                            embedCode={`<iframe src="http://127.0.0.1:5000/chat/${user?.id}" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>`}
                         />
                     )}
 
