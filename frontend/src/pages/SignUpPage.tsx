@@ -36,7 +36,7 @@ const SignInPage: React.FC = () => {
         event.preventDefault();
 
         try {
-            const user = (await axios.post("http://127.0.0.1:5000/signin", { email, password })).data;
+            const user = (await axios.post(`${import.meta.env.VITE_SERVER_URL}/signup`, { email, password })).data;
 
             if (user) {
                 setUser(user);

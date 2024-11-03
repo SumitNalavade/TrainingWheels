@@ -74,7 +74,7 @@ const StudioPage: React.FC = () => {
     const fetchPreviousFiles = async () => {
         try {
             setIsLoading(true);
-            const response = await axios.get(`http://127.0.0.1:5000/get_file?user_id=${user?.id}`);
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/get_file?user_id=${user?.id}`)
             const previousFiles = response.data;
 
             console.log(previousFiles);
@@ -94,7 +94,7 @@ const StudioPage: React.FC = () => {
             const formData = new FormData();
             formData.append('file', file);
 
-            await axios.post(`http://127.0.0.1:5000/upload?user_id=${user?.id}`, formData, {
+            await axios.post(`${import.meta.env.VITE_SERVER_URL}/upload?user_id=${user?.id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -125,7 +125,7 @@ const StudioPage: React.FC = () => {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
         setInputMessage("");
 
-        const response = (await axios.post("http://127.0.0.1:5000/search", { user_id: user?.id, query: inputMessage, conversation_id: conversationId })).data
+        const response = (await axios.post(`${import.meta.env.VITE_SERVER_URL}/search`, { user_id: user?.id, query: inputMessage, conversation_id: conversationId })).data
 
         setMessages((prevMessages) => [...prevMessages, response]);
     };
@@ -198,7 +198,7 @@ const StudioPage: React.FC = () => {
                     {showModal && (
                         <EmbedPopup
                             onClose={closeShareModal}
-                            embedCode={`<iframe src="http://localhost:5173/chat/${user?.id}" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>`}
+                            embedCode={`<iframe src="${import.meta.env.VITE_BASE_URL}/chat/${user?.id}" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>`}
                         />
                     )}
 

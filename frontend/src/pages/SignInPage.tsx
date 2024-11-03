@@ -37,7 +37,7 @@ const SignInPage: React.FC = () => {
 
         try {
             const user = (
-                await axios.post("http://127.0.0.1:5000/signin", { email, password })
+                await axios.post(`${import.meta.env.VITE_SERVER_URL}/signin`, { email, password })
             ).data;
 
             if (user) {
