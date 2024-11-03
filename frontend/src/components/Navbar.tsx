@@ -2,6 +2,7 @@ import React from "react";
 //@ts-ignore
 import mascot from "../assets/mascot.png";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 interface NavbarProps {
   noMargin?: boolean;
@@ -32,6 +33,7 @@ const Navbar: React.FC<NavbarProps> = ({ noMargin, purple }) => {
         </button>
         <button className="text-sm antialiased">Pricing</button>
         <button className="text-sm antialiased">Contact</button>
+        <Link to="/insights"><button className="text-sm antialiased">Insights</button></Link>
         <button
           className="rounded-full px-5 py-2 bg-[#FFFFFF] text-sm text-[#837FFC] border border-[#837FFC] hover:text-[#FFFFFF] hover:bg-[#837FFC] antialiased"
           onClick={routeToSignIn}
