@@ -448,33 +448,40 @@ def get_key_topics():
         2. num_topics (optional, default: 3) : the number of unqiue topics of user discussion to be identified
         3. num_words (optional, default: 3) : the number of unique words of user discussion to be identified for each topic
     '''
+    try:
+        # input validation: user_id
+        if 'user_id' not in request.args:
+            return jsonify({"error": "No user_id provided in the request"}), 400
 
-    # input validation: user_id
-    if 'user_id' not in request.args:
-        return jsonify({"error": "No user_id provided in the request"}), 400
-
-    # access the user id
-    user_id = request.args['user_id']
-
-    if 'num_topics' in request.args:
         # access the user id
-        num_topics = request.args['num_topics']
-    
-    if 'num_words' in request.args:
-        # access the user id
-        num_words = request.args['num_words']
+        user_id = request.args['user_id']
 
-    
-    user = User.query.filter_by(id=user_id).first()
-    corpus = user.message_ids
+        if 'num_topics' in request.args:
+            # access the user id
+            num_topics = int(request.args['num_topics'])
+        
+        if 'num_words' in request.args:
+            # access the user id
+            num_words = int(request.args['num_words'])
 
-    predictions = predict(corpus, num_words, num_topics, model = 'lda')
+        
+        print("User ID: ", user_id)
+        user = User.query.filter_by(id=user_id).first()
+        print("User", user)
+        corpus = user.message_ids
 
-    extracted_strings = [quote for item in predictions for quote in re.findall(r'"(.*?)"', item[1])]
+        predictions = predict(corpus, num_words, num_topics, model = 'lda')
 
-    print(extracted_strings)
+        extracted_strings = [quote for item in predictions for quote in re.findall(r'"(.*?)"', item[1])]
 
-    return jsonify(extracted_strings), 200
+        return jsonify(extracted_strings), 200
+    except Exception as e:
+        print("Error @ /get-key-topics ||", e)
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
 
 @processing_routes_bp.route("/get-data-distribution", methods=["GET"])
 def get_data_distribution():
