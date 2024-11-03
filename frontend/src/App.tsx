@@ -8,6 +8,7 @@ import LandingPage from "./pages/LandingPage";
 import StudioPage from "./pages/StudioPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
+import Chat from "./components/Chat";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
     path: "/signup",
     element: (<SignUpPage />),
   },
+  {
+    path: "/chat",
+    element: (<Chat />)
+  }
 ]);
 
 function App() {

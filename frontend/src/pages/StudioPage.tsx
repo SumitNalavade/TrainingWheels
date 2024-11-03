@@ -25,6 +25,7 @@ interface ResponseData {
 }
 
 import axios from "axios";
+import Chat from "../components/Chat";
 
 const StudioPage: React.FC = () => {
     const [files, setFiles] = useState<File[]>([]);
@@ -119,16 +120,6 @@ const StudioPage: React.FC = () => {
         setMessages(sampleMessages);
     }, []);
 
-    const [showModal, setShowModal] = useState(false);
-
-    const showShareModal = () => {
-        setShowModal(true);
-    };
-
-    const closeShareModal = () => {
-        setShowModal(false);
-    };
-
     return (
         <div className="flex h-screen">
             <Sidebar
@@ -138,57 +129,8 @@ const StudioPage: React.FC = () => {
                 toggleSidebar={toggleSidebar}
             />
 
-            <div className="w-3/4 p-1 pl-10 pr-10 flex flex-col justify-between">
-
-                <div
-                    className="flex justify-between items-center mt-2 mb-24"
-                    onClick={showShareModal}
-                >
-                    <img src={mascot} alt="Mascot" className="w-15 h-15" />
-                    <div className="flex p-3 rounded-lg bg-purple-200 space-x-4 hover:bg-purple-300 cursor-pointer">
-                        <span className="text-md">
-                            Embed
-                        </span>
-                        <ImEmbed2 size={24} />
-                    </div>
-                </div>
-                {showModal && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
-                            <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-lg font-semibold">Embed This!</h2>
-                                <button onClick={closeShareModal}>
-                                    <AiOutlineClose size={20} />
-                                </button>
-                            </div>
-                            <p> {'<iframe src="/studio" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>'}</p>
-                        </div>
-                    </div>
-                )}
-
-                <div className="space-y-8 overflow-y-auto h-full">
-                    {messages.map((message, index) => (
-                        <div key={index} className={`flex ${message.type === "human" ? "justify-end" : "justify-start"}`}>
-                            <div className={`p-3 rounded-lg max-w-xs text-sm ${message.type === "human" ? "bg-purple-100" : "bg-gray-200"}`}>
-                                {message.data.content}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="flex items-center mt-4 border-t border-gray-200 pt-4 pb-4">
-                    <input
-                        type="text"
-                        placeholder="Type your message here..."
-                        className="w-full p-2 border border-gray-300 bg-[#E0E0E0] rounded-md focus:outline-none text-sm"
-                        value={inputMessage}
-                        onChange={(e) => setInputMessage(e.target.value)}
-                        onKeyDown={handleKeyPress}
-                    />
-                    <button onClick={handleSendMessage} className="ml-2 p-2 text-purple-500 hover:text-purple-700">
-                        <BsSend size={20} />
-                    </button>
-                </div>
+            <div className="w-5/6">
+                <Chat />
             </div>
         </div>
     );
