@@ -9,11 +9,16 @@ import { IoSearchOutline } from "react-icons/io5";
 
 const fileTypes = ["jpeg", "jpg", "png", "mov", "pdf", "mp4"];
 
+interface IFile extends File {
+    url: string
+}
+
 interface SidebarProps {
-    files: File[];
+    files: IFile[];
     onFileChange: (file: File) => void;
     showSidebar: boolean;
     toggleSidebar: () => void;
+    isLoading: boolean
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -21,19 +26,20 @@ const Sidebar: React.FC<SidebarProps> = ({
     onFileChange,
     showSidebar,
     toggleSidebar,
+    isLoading
 }) => {
     const getFileIcon = (file: File) => {
         const iconClass = "text-4xl text-gray-600 transition-colors duration-200";
 
         switch (file.type) {
-            case "image/jpeg":
-            case "image/jpg":
-            case "image/png":
+            case "jpeg":
+            case "jpg":
+            case "png":
                 return <CiImageOn className={iconClass} />;
-            case "video/quicktime":
-            case "video/mp4":
+            case "quicktime":
+            case "mp4":
                 return <BsCameraVideo className={iconClass} />;
-            case "application/pdf":
+            case "pdf":
                 return <BsFiletypePdf className={iconClass} />;
             default:
                 return <BsFillImageFill className={iconClass} />;
@@ -52,6 +58,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             </div>
         );
     }
+
+    console.log(files)
 
     return (
         <div className="w-80 border-r border-gray-200 flex flex-col h-full bg-[#FBF7FF]">
@@ -79,15 +87,17 @@ const Sidebar: React.FC<SidebarProps> = ({
             <div className="flex-1 overflow-y-auto p-4">
                 <div className="grid grid-cols-2 gap-4">
                     {files.map((file, index) => (
-                        <div
-                            key={index}
-                            className="group flex flex-col items-center p-4 space-y-2 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200 cursor-pointer"
-                        >
-                            {getFileIcon(file)}
-                            <span className="text-xs text-gray-600 text-center truncate w-full">
-                                {file.name}
-                            </span>
-                        </div>
+                        <a key={index} href={file.url} target="__blank">
+                            <div
+                                key={index}
+                                className="group flex flex-col items-center p-4 space-y-2 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200 cursor-pointer"
+                            >
+                                {getFileIcon(file)}
+                                <span className="text-xs text-gray-600 text-center truncate w-full">
+                                    {file.name}
+                                </span>
+                            </div>
+                        </a>
                     ))}
                 </div>
             </div>
