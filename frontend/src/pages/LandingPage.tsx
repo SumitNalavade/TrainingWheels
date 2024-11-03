@@ -9,6 +9,7 @@ import { BsUpload } from "react-icons/bs";
 import { GoDatabase } from "react-icons/go";
 import { PiBracketsAngleThin } from "react-icons/pi";
 import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -19,21 +20,7 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FBF7FF]">
-      <nav className="w-full h-24 bg-[#FBF7FF] flex items-center justify-between max-w-5xl mx-auto px-6 py-6 mb-16">
-        <div className="flex items-center">
-          <img src={mascot} alt="Mascot" className="h-12 w-auto" />
-        </div>
-
-        <div className="text-xl font-semibold">
-          <button
-            className="rounded-lg px-5 py-2 bg-[#E0E0E0] text-md text-[#999999] border border-transparent"
-            onClick={handleStartToday}
-          >
-            Start Today - It's Free
-          </button>
-        </div>
-      </nav>
-
+      <Navbar />
       <div className="flex-grow flex items-center justify-center px-10 bg-[#FBF7FF]">
         <div className="flex w-full max-w-6xl space-x-10">
           <div className="flex-1 flex flex-col items-start space-y-4">
