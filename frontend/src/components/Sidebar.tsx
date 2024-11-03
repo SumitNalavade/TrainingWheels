@@ -1,16 +1,16 @@
 import React from "react";
 import { FileUploader } from "react-drag-drop-files";
-import { BsFiletypePdf, BsCameraVideo } from "react-icons/bs";
-import { CiImageOn } from "react-icons/ci";
-import { BsFillImageFill } from "react-icons/bs";
-import { FiUpload, FiSidebar } from "react-icons/fi";
-import { FaPenNib } from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
+import { FiUpload } from "react-icons/fi";
+import { FiSidebar } from "react-icons/fi";
+import { BsFiletypePdf } from "react-icons/bs";
+import { BsCameraVideo } from "react-icons/bs";
+import { CiImageOn } from "react-icons/ci";
 
 const fileTypes = ["jpeg", "jpg", "png", "mov", "pdf", "mp4"];
 
 interface IFile extends File {
-    url: string
+    url: string;
 }
 
 interface SidebarProps {
@@ -27,7 +27,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     toggleSidebar,
 }) => {
     const getFileIcon = (file: File) => {
-        const iconClass = "text-4xl text-gray-600 transition-colors duration-200";
+        const iconClass = "text-4xl text-[#837FFC]";
 
         switch (file.type) {
             case "jpeg":
@@ -40,79 +40,79 @@ const Sidebar: React.FC<SidebarProps> = ({
             case "pdf":
                 return <BsFiletypePdf className={iconClass} />;
             default:
-                return <BsFillImageFill className={iconClass} />;
+                return <BsFiletypePdf className={iconClass} />;
         }
     };
 
     if (!showSidebar) {
         return (
-            <div className="w-16 bg-[#FBF7FF] border-r border-gray-200 p-4 flex flex-col">
+            <div className="w-16 bg-gray-200 border-r border-gray-100 p-4 flex flex-col">
                 <button
                     onClick={toggleSidebar}
-                    className="p-2 rounded-lg transition-colors duration-200"
+                    className="p-2 rounded-lg text-gray-400 hover:text-gray-600 transition-colors duration-200"
                 >
-                    <FiSidebar className="text-2xl text-gray-600" />
+                    <FiSidebar className="text-2xl" />
                 </button>
             </div>
         );
     }
 
-    console.log(files)
-
     return (
-        <div className="w-80 border-r border-gray-200 flex flex-col h-full bg-[#FBF7FF]">
-            <div className="flex justify-between items-center p-4 border-b border-gray-200">
+        <div className="w-96 bg-gray-200 border-r border-gray-100 flex flex-col h-full">
+            <div className="p-4 flex items-center">
                 <button
                     onClick={toggleSidebar}
-                    className="p-2 rounded-lg transition-colors duration-200"
+                    className="p-2 rounded-lg text-gray-400 hover:text-gray-600 transition-colors duration-200"
                 >
-                    <FiSidebar className="text-2xl text-gray-600" />
+                    <FiSidebar className="text-2xl" />
                 </button>
-                <FaPenNib className="text-2xl" />
             </div>
 
-            <div className="p-4">
+            <div className="px-4 mb-4">
                 <div className="relative">
                     <IoSearchOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     <input
                         type="text"
-                        placeholder="Search Content..."
-                        className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200"
+                        placeholder="Search content"
+                        className="w-full pl-10 pr-4 py-2 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-100 transition-all duration-200"
                     />
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4">
-                <div className="grid grid-cols-2 gap-4">
-                    {files.map((file, index) => (
-                        <a key={index} href={file.url} target="__blank">
-                            <div
-                                key={index}
-                                className="group flex flex-col items-center p-4 space-y-2 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200 cursor-pointer"
-                            >
-                                {getFileIcon(file)}
-                                <span className="text-xs text-gray-600 text-center truncate w-full">
-                                    {file.name}
-                                </span>
-                            </div>
-                        </a>
-                    ))}
-                </div>
-            </div>
-
-            <div className="p-4 border-t border-gray-200">
+            <div className="px-4 mb-4">
                 <FileUploader
                     handleChange={onFileChange}
                     name="file"
                     types={fileTypes}
                 >
-                    <div className="flex justify-center">
-                        <div className="flex justify-center mt-4 w-full p-3 border-gray-300 rounded-lg text-center cursor-pointer text-lg text-gray-600 bg-[#E0E0E0] hover:bg-gray-300 space-x-2 transition-colors duration-200">
-                            <FiUpload size={26} />
-                            <span className="hidden lg:inline">Upload Content</span>
-                        </div>
-                    </div>
+                    <button className="w-full py-3 px-4 bg-[#837FFC] hover:bg-indigo-600 text-white rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2">
+                        <FiUpload className="text-xl" />
+                        <span>Upload files</span>
+                    </button>
                 </FileUploader>
+            </div>
+
+            <div className="flex-1 overflow-y-auto px-4">
+                <div className="grid grid-cols-2 gap-4">
+                    {files.map((file, index) => (
+                        <a
+                            key={index}
+                            href={file.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block"
+                        >
+                            <div className="bg-white border border-gray-100 rounded-lg p-4 hover:shadow-md transition-all duration-200">
+                                <div className="flex flex-col items-center">
+                                    {getFileIcon(file)}
+                                    <span className="mt-2 text-sm text-gray-600 text-center truncate w-full">
+                                        {file.name}
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                    ))}
+                </div>
             </div>
         </div>
     );

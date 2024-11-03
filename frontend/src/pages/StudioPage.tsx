@@ -184,7 +184,7 @@ const StudioPage: React.FC = () => {
                     />
                     <button
                         onClick={handleSendMessage}
-                        className="ml-2 p-2 text-purple-500 hover:text-purple-700"
+                        className="ml-2 p-2 text-[#837FFC]"
                     >
                         <BsSend size={20} />
                     </button>

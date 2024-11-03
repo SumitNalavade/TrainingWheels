@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
 
                 <div className="flex flex-col space-y-4">
                     <img src={mascot} alt="Logo" className="h-14 w-14" />
-                    <div className="flex gap-4 text-purple-600">
+                    <div className="flex gap-4 text-[#837FFC]">
                         <img src={x} alt="X icon" className="h-6 w-6" />
                         <img src={ig} alt="Instagram icon" className="h-6 w-6" />
                         <img src={git} alt="GitHub icon" className="h-6 w-6" />
@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
                 <div className="flex-1 flex justify-center space-x-40">
 
                     <div>
-                        <h3 className="text-purple-600">Use cases</h3>
+                        <h3 className="text-[#837FFC]">Use cases</h3>
                         <ul className="mt-2 space-y-2">
                             <li className="text-gray-700 ">Personal websites</li>
                             <li className="text-gray-700 ">Small businesses</li>
@@ -36,7 +36,7 @@ const Footer: React.FC = () => {
                     </div>
 
                     <div>
-                        <h3 className="text-purple-600 font-semibold">Resources</h3>
+                        <h3 className="text-[#837FFC] font-semibold">Resources</h3>
                         <ul className="mt-2 space-y-2">
                             <li className="text-gray-700 ">Tutorials</li>
                             <li className="text-gray-700 ">Client use cases</li>
@@ -45,7 +45,7 @@ const Footer: React.FC = () => {
                     </div>
 
                     <div>
-                        <h3 className="text-purple-600 font-semibold">Contact</h3>
+                        <h3 className="text-[#837FFC] font-semibold">Contact</h3>
                         <ul className="mt-2 space-y-2">
                             <li className="text-gray-700 ">Email</li>
                             <li className="text-gray-700 ">LinkedIn</li>
