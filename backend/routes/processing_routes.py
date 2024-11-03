@@ -445,6 +445,8 @@ def get_key_topics():
 
     Input: 
         1. user_id : user id of the user 
+        2. num_topics (optional, default: 3) : the number of unqiue topics of user discussion to be identified
+        3. num_words (optional, default: 3) : the number of unique words of user discussion to be identified for each topic
     '''
 
     # input validation: user_id
@@ -453,10 +455,20 @@ def get_key_topics():
 
     # access the user id
     user_id = request.args['user_id']
+
+    if 'num_topics' in request.args:
+        # access the user id
+        num_topics = request.args['num_topics']
+    
+    if 'num_words' in request.args:
+        # access the user id
+        num_words = request.args['num_words']
+
+    
     user = User.query.filter_by(id=user_id).first()
     corpus = user.message_ids
 
-    predictions = predict(corpus, 2)
+    predictions = predict(corpus, num_words, num_topics, model = 'lda')
 
     extracted_strings = [quote for item in predictions for quote in re.findall(r'"(.*?)"', item[1])]
 
