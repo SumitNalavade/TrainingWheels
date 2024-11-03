@@ -507,3 +507,34 @@ def get_data_distribution():
             type_dict[file.type] = 1    # Initialize the count to 1 for a new type
 
     return jsonify(type_dict), 200  # Return the count of file types as JSON
+
+@processing_routes_bp.route("/get-data-distribution", methods=["GET"])
+def get_data_distribution():
+    '''
+    Given a user_id, get a dictinary returning the distribution of data with regards to file type
+
+    Input: 
+        1. user_id : user id of the user 
+    '''
+
+    # input validation: user_id
+    if 'user_id' not in request.args:
+        return jsonify({"error": "No user_id provided in the request"}), 400
+
+    # access the user id
+    user_id = request.args['user_id']
+    user = User.query.filter_by(id=user_id).first()
+
+    files = db.session.query(File).filter(File.user_id == user_id).all()
+
+    # Initialize dictionary to count file types
+    type_dict = {}
+
+    # Count occurrences of each file type
+    possible_file_types = ['png', 'pdf', 'jpg', 'jpeg', 'mp4', 'mov']
+    pftdict = {file_type: 0 for file_type in possible_file_types}
+
+    for file in files:
+        pftdict[file] += 1
+
+    return jsonify(pftdict), 200  
