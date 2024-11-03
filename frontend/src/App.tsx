@@ -9,6 +9,7 @@ import StudioPage from "./pages/StudioPage";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import Chat from "./pages/Chat";
+import Insights from "./pages/Insights";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: "/chat/:id",
     element: (<Chat />)
+  },
+  {
+    path: "/insights",
+    element: (<Insights />)
   }
 ]);
 
