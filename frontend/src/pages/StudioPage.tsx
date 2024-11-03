@@ -62,7 +62,8 @@ const StudioPage: React.FC = () => {
 
     const fetchPreviousFiles = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/get_file?user_id=${user?.id}`);
+            setIsLoading(true);
+            const response = await axios.get(`http://127.0.0.1:5000/get_file?user_id=${user?.id}`);
             const previousFiles = response.data;
             
             setFiles(previousFiles);
@@ -79,7 +80,7 @@ const StudioPage: React.FC = () => {
             const formData = new FormData();
             formData.append('file', file);
 
-            await axios.post(`http://localhost:5000/upload?user_id=${user?.id}`, formData, {
+            await axios.post(`http://127.0.0.1:5000/upload?user_id=${user?.id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
