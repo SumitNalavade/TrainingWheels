@@ -96,7 +96,7 @@ const Chat: React.FC = () => {
                 </div>
             </div>
             {showModal && (
-                <EmbedPopup onClose={closeShareModal} />
+                <EmbedPopup onClose={closeShareModal} embedCode={`<iframe src="http://localhost:5173/chat/${user_id}"`} />
             )}
 
             <div className="space-y-8 overflow-y-auto h-full">
