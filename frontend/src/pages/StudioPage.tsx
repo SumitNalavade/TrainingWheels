@@ -66,7 +66,7 @@ const StudioPage: React.FC = () => {
 
     const user = useAppStore(state => state.user);
 
-    const messagesEndRef = useRef(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const navigate = useNavigate();
 

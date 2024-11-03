@@ -82,7 +82,7 @@ const Chat: React.FC = () => {
         setShowModal(false);
     };
 
-    const messagesEndRef = useRef(null);
+    const messagesEndRef = useRef<HTMLDivElement>(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

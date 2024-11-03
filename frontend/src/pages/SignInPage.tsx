@@ -14,6 +14,19 @@ const SignInPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const slides = [
+    { id: 1, content: "Slide 1 Content" },
+    { id: 2, content: "Slide 2 Content" },
+    { id: 3, content: "Slide 3 Content" },
+    { id: 4, content: "Slide 4 Content" },
+  ];
+
+  const handleDotClick = (index) => {
+    setCurrentIndex(index);
+  };
+
   const handleSignIn = async (event: FormEvent) => {
     event.preventDefault();
 
@@ -113,9 +126,19 @@ const SignInPage: React.FC = () => {
           </form>
         </div>
 
-        <div className="w-7/12 bg-[#ffffff] flex items-center justify-center">
-          <div className="w-3/4 h-3/4 bg-gray-300 flex items-center justify-center border-2 border-dashed border-gray-500 rounded-lg">
-            <p className="text-gray-600 text-lg">Video Placeholder</p>
+        <div className="w-7/12 bg-[#ffffff] flex flex-col items-center justify-center gap-y-5">
+          <div className="w-3/4 h-3/4 bg-gray-300 flex items-center justify-center rounded-lg" >
+            <p className="text-gray-600 text-lg">{slides[currentIndex].content}</p>
+          </div>
+
+          <div className="flex mt-4 space-x-2">
+            {slides.map((slide, index) => (
+              <button
+                key={slide.id}
+                className={`w-2.5 h-2.5 rounded-full ${currentIndex === index ? 'bg-gray-600' : 'bg-gray-300'}`}
+                onClick={() => handleDotClick(index)}
+              />
+            ))}
           </div>
         </div>
       </div>
