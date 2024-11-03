@@ -3,6 +3,9 @@ import useAppStore from "../stores/useAppStore";
 import Sidebar from '../components/Sidebar';
 import { FiUpload } from "react-icons/fi";
 import { BsSend } from "react-icons/bs";
+import { AiOutlineClose } from "react-icons/ai";
+import { ImEmbed2 } from "react-icons/im";
+
 // @ts-ignore
 import mascot from "../assets/mascot.png";
 import axios from "axios";
@@ -143,6 +146,15 @@ const StudioPage: React.FC = () => {
         setMessages(sampleMessages);
     }, []);
 
+    const [showModal, setShowModal] = useState(false);
+
+    const showShareModal = () => {
+        setShowModal(true);
+    };
+
+    const closeShareModal = () => {
+        setShowModal(false);
+    };
     const toggleSidebar = () => setShowSidebar(!showSidebar);
 
     return (
@@ -163,6 +175,19 @@ const StudioPage: React.FC = () => {
                         <FiUpload size={20} />
                     </div>
                 </div>
+                {showModal && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
+                            <div className="flex justify-between items-center mb-4">
+                                <h2 className="text-lg font-semibold">Embed This!</h2>
+                                <button onClick={closeShareModal}>
+                                    <AiOutlineClose size={20} />
+                                </button>
+                            </div>
+                            <p> {'<iframe src="/studio" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>'}</p>
+                        </div>
+                    </div>
+                )}
 
                 <div className="space-y-8 overflow-y-auto h-full">
                     {messages.map((message, index) => (
