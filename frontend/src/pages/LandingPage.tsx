@@ -41,7 +41,7 @@ const LandingPage: React.FC = () => {
               <br />
               Website in Minutes
             </h1>
-            <div className="space-y-1 ml-6">
+            <div className="space-y-1 ml-10">
               <p className="text-sm text-[#656D7A] text-left">
                 Create custom AI chatbots trained on your content.
               </p>
@@ -49,7 +49,7 @@ const LandingPage: React.FC = () => {
                 Embed them anywhere. No coding required.
               </p>
             </div>
-            <div className="flex space-x-4 mt-6">
+            <div className="flex space-x-4 mt-6 ml-4">
               <button
                 className="w-48 px-6 py-3 bg-white text-[#837FFC] text-sm rounded-full border border-[#837FFC] hover:border-black"
                 onClick={handleStartToday}
@@ -119,8 +119,9 @@ const LandingPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex items-center justify-center text-5xl mt-16">
-        <h1>How It Works</h1>
+      <div className="flex-grow flex flex-col items-center justify-center px-10 text-center mt-16 bg-[#FBF7FF]">
+        <h1 className="text-5xl">How It Works</h1>
+        <p className="mt-4 text-md text-[#656D7A]">Here's the heavy lifting we'll take care of for you</p>
       </div>
 
       <div className="flex items-center justify-center mt-16">
@@ -128,9 +129,9 @@ const LandingPage: React.FC = () => {
           <div className="flex-1 bg-[#E3E2FF] flex flex-col items-center justify-center rounded-lg p-6 min-h-[180px]">
             <BsUpload className="text-5xl text-[#837FFC]" />
             <p className="font-bold text-xl text-[#837FFC]">
-              Upload Your Content
+              Upload Your Content 
             </p>
-            <p className="text-center text-md mt-3 text-[#837FFC]">
+            <p className="text-center text-sm mt-3 text-[#837FFC]">
               Simply upload your documents, FAQs, or knowledge base. We'll
               process and index your content automatically.
             </p>
@@ -138,17 +139,15 @@ const LandingPage: React.FC = () => {
           <div className="flex-1 bg-[#E3E2FF] flex flex-col items-center justify-center rounded-lg p-6 min-h-[180px]">
             <GoDatabase className="text-5xl text-[#837FFC]" />
             <p className="font-bold text-xl text-[#837FFC]">Train Your Bot</p>
-            <p className="text-center text-md text-[#837FFC] mt-3">
-              Simply upload your documents, FAQs, or knowledge base. We'll
-              process and index your content automatically.
+            <p className="text-center text-sm text-[#837FFC] mt-3">
+              Our platform uses advanced AI technology to create a chatbot that understands your content and can answer questions.
             </p>
           </div>
           <div className="flex-1 bg-[#E3E2FF] flex flex-col items-center justify-center rounded-lg p-6 min-h-[180px]">
             <PiBracketsAngleThin className="text-5xl text-[#837FFC]" />
             <p className="font-bold text-xl text-[#837FFC]">Embed Anywhere</p>
-            <p className="text-center text-md text-[#837FFC] mt-3">
-              Simply upload your documents, FAQs, or knowledge base. We'll
-              process and index your content automatically.
+            <p className="text-center text-sm text-[#837FFC] mt-3">
+              Get a simple embed code to add your chatbot to any website, just like embedding a YouTube video.
             </p>
           </div>
         </div>
