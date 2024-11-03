@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from 'react-router-dom';
 import { BsSend } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
 import { ImEmbed2 } from "react-icons/im";
+import { v4 as uuid } from "uuid";
 import mascot from "../assets/mascot.png";
+import axios from "axios";
 
 interface ResponseData {
     type: string;
@@ -21,62 +24,44 @@ interface ResponseData {
 }
 
 const Chat: React.FC = () => {
-    const [messages, setMessages] = useState<ResponseData[]>([]);
-    const [inputMessage, setInputMessage] = useState("");
-
-    const handleSendMessage = () => {
-        if (inputMessage.trim()) {
-            const newMessage: ResponseData = {
-                type: "human",
-                data: {
-                    content: inputMessage,
-                    additional_kwargs: {},
-                    response_metadata: {},
-                    type: "human",
-                    name: null,
-                    id: null,
-                    example: false
-                }
-            };
-
-            setMessages((prevMessages) => [...prevMessages, newMessage]);
-            setInputMessage("");
+    const { id: user_id } = useParams(); // Get the dynamic ID
+    
+    const [messages, setMessages] = useState<ResponseData[]>([{
+        type: "ai",
+        data: {
+            content: "Howdy! How may I help you?",
+            additional_kwargs: {},
+            response_metadata: {},
+            type: "human",
+            name: null,
+            id: null,
+            example: false
         }
-    };
+    }]);
+    const [inputMessage, setInputMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
+    const [conversationId, setConversationId] = useState(uuid());
 
-    useEffect(() => {
-        const sampleMessages: ResponseData[] = [
-            {
+    const handleSendMessage = async () => {
+        const newMessage: ResponseData = {
+            type: "human",
+            data: {
+                content: inputMessage,
+                additional_kwargs: {},
+                response_metadata: {},
                 type: "human",
-                data: {
-                    content: "is it safe to travel for new born babies?",
-                    additional_kwargs: {},
-                    response_metadata: {},
-                    type: "human",
-                    name: null,
-                    id: null,
-                    example: false
-                }
-            },
-            {
-                type: "ai",
-                data: {
-                    content: "It tends to be safer to avoid unnecessary travel with newborn babies, as they are more vulnerable to infections and need time to adjust to their new environment. It's important to consult with a healthcare provider before making any travel plans with a newborn.",
-                    additional_kwargs: {},
-                    response_metadata: {},
-                    type: "ai",
-                    name: null,
-                    id: null,
-                    example: false,
-                    tool_calls: [],
-                    invalid_tool_calls: [],
-                    usage_metadata: null
-                }
-            },
-        ];
+                name: null,
+                id: null,
+                example: false
+            }
+        };
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+        setInputMessage("");
 
-        setMessages(sampleMessages);
-    }, []);
+        const response = (await axios.post("http://localhost:5000/search", { user_id: user_id, query: inputMessage, conversation_id: conversationId })).data
+
+        setMessages((prevMessages) => [...prevMessages, response]);
+    };
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
@@ -117,7 +102,7 @@ const Chat: React.FC = () => {
                                 <AiOutlineClose size={20} />
                             </button>
                         </div>
-                        <p> {'<iframe src="/chat" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>'}</p>
+                        <p> {`<iframe src="http://localhost:5173/chat/${user_id}" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>`}</p>
                     </div>
                 </div>
             )}

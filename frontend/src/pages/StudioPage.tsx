@@ -70,8 +70,6 @@ const StudioPage: React.FC = () => {
         } catch (error) {
             console.error("Error fetching previous files:", error);
             alert("Failed to load previous files");
-        } finally {
-            setIsLoading(false);
         }
     };
 
@@ -145,7 +143,6 @@ const StudioPage: React.FC = () => {
                 onFileChange={handleFileChange}
                 showSidebar={showSidebar}
                 toggleSidebar={toggleSidebar}
-                isLoading={isLoading}
             />
 
             <div className="w-3/4 p-1 pl-10 pr-10 flex flex-col justify-between">

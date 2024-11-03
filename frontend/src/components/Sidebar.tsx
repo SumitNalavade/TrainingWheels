@@ -18,7 +18,6 @@ interface SidebarProps {
     onFileChange: (file: File) => void;
     showSidebar: boolean;
     toggleSidebar: () => void;
-    isLoading: boolean
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -26,7 +25,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     onFileChange,
     showSidebar,
     toggleSidebar,
-    isLoading
 }) => {
     const getFileIcon = (file: File) => {
         const iconClass = "text-4xl text-gray-600 transition-colors duration-200";

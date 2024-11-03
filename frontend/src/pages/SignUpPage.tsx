@@ -2,28 +2,44 @@ import React, { FormEvent, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
 import useAppStore from "../stores/useAppStore";
+import { signInWithGoogle } from "../services/authService"; 
 
 const SignUpPage: React.FC = () => {
     const navigate = useNavigate();
-    
     const setUser = useAppStore(state => state.setUser);
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    
+
     const handleSignUp = async (event: FormEvent) => {
         event.preventDefault();
         
-        const user = (await axios.post("http://127.0.0.1:5000/signup", { name, email, password })).data;
+        try {
+            const response = await axios.post("http://localhost:5000/signup", { name, email, password });
+            const user = response.data;
 
-        if(user) {
-            setUser(user);
-            navigate("/studio");
+            if (user) {
+                setUser(user);
+                navigate("/studio");
+            }
+        } catch (error) {
+            console.error("Error signing up:", error);
         }
-    }
+    };
+
+    const handleGoogleSignUp = async () => {
+        try {
+            await signInWithGoogle();
+            const user = useAppStore.getState().user;
+            if (user) {
+                navigate("/studio");
+            }
+        } catch (error) {
+            console.error("Google Sign-Up Error:", error);
+        }
+    };
 
     return (
         <div className="flex h-screen">
@@ -38,8 +54,9 @@ const SignUpPage: React.FC = () => {
                 </p>
 
                 <button
-                    type="submit"
+                    type="button"
                     className="w-2/3 p-2 bg-[#D1D1D1] text-white rounded-lg border border-transparent hover:border-black flex items-center justify-center"
+                    onClick={handleGoogleSignUp}
                 >
                     <FcGoogle className="mr-2 text-lg" /> Sign Up with Google
                 </button>
@@ -64,12 +81,13 @@ const SignUpPage: React.FC = () => {
                         />
                     </div>
                     <div className="w-full mb-4">
-                    <p className="mb-1 text-left text-xs font-sans font-semibold">Password</p>
+                        <p className="mb-1 text-left text-xs font-sans font-semibold">Password</p>
                         <input 
                             type="password"
                             placeholder="hookem26"
                             onChange={(evt) => setPassword(evt.target.value)}
-                            className="w-full p-2 mb-4 border border-gray-300 rounded-lg" />
+                            className="w-full p-2 mb-4 border border-gray-300 rounded-lg" 
+                        />
                     </div>
                     <button
                         type="submit"
@@ -87,6 +105,6 @@ const SignUpPage: React.FC = () => {
             </div>
         </div>
     );
-}
+};
 
 export default SignUpPage;
