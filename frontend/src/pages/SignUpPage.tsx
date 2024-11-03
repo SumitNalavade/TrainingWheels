@@ -5,6 +5,7 @@ import axios from "axios";
 import useAppStore from "../stores/useAppStore";
 import { signInWithGoogle } from "../services/authService"; 
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const SignInPage: React.FC = () => {
     const navigate = useNavigate();
@@ -45,9 +46,9 @@ const SignInPage: React.FC = () => {
     };
     
     return (
-        <div className="flex flex-col h-screen">
+        <div className="flex flex-col min-h-screen">
             <Navbar noMargin/>
-            <div className="flex flex-grow">
+            <div className="flex flex-grow min-h-[90vh]">
                 <div className="w-5/12 bg-[#FBF7FF] flex flex-col justify-center items-center text-center">
                     <h1 className="text-7xl font-bold leading-tight">
                         <span>Your Ideas,</span>
@@ -109,6 +110,7 @@ const SignInPage: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 };
