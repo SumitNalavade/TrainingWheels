@@ -178,7 +178,7 @@ const StudioPage: React.FC = () => {
                     </button>
                     <button className="text-sm antialiased">Pricing</button>
                     <button className="text-sm antialiased">Contact</button>
-                    <button className="text-sm antialiased">Insights</button>
+                    <Link to="/insights"><button className="text-sm antialiased">Insights</button></Link>
                     <button onClick={showShareModal} className="rounded-full px-5 py-2 bg-[#837FFC] text-sm text-[#FFFFFF] border border-transparent  hover:border-[#837FFC] hover:bg-indigo-600 antialiased inline-flex items-center gap-2">
                         Share <IoShareSocialOutline />
                     </button>
