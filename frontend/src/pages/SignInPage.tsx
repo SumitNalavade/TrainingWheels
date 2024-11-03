@@ -16,7 +16,7 @@ const SignInPage: React.FC = () => {
     const handleSignIn = async (event: FormEvent) => {
         event.preventDefault();
         
-        const user = (await axios.post("http://localhost:5000/signin", { email, password })).data;
+        const user = (await axios.post("http://127.0.0.1:5000/signin", { email, password })).data;
 
         if(user) {
             setUser(user);

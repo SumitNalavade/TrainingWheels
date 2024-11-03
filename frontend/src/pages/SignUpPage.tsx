@@ -17,7 +17,7 @@ const SignUpPage: React.FC = () => {
     const handleSignUp = async (event: FormEvent) => {
         event.preventDefault();
         
-        const user = (await axios.post("http://localhost:5000/signup", { name, email, password })).data;
+        const user = (await axios.post("http://127.0.0.1:5000/signup", { name, email, password })).data;
 
         if(user) {
             setUser(user);
