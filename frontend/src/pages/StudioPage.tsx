@@ -42,7 +42,6 @@ interface FileData {
     name: string;
     url: string;
     type: string;
-    // Add other properties as needed
 }
 
 const StudioPage: React.FC = () => {
@@ -63,6 +62,7 @@ const StudioPage: React.FC = () => {
     const [inputMessage, setInputMessage] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [conversationId, setConversationId] = useState(uuid());
+    const [isUploading, setIsUploading] = useState(false);
 
     const user = useAppStore(state => state.user);
 
@@ -84,8 +84,9 @@ const StudioPage: React.FC = () => {
     };
 
     const handleFileChange = async (file: File) => {
+        setIsUploading(true);
+
         try {
-            setFiles((prevFiles) => [...prevFiles, file as IFile]);
 
             const formData = new FormData();
             formData.append('file', file);
@@ -95,9 +96,13 @@ const StudioPage: React.FC = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
+
+            setFiles((prevFiles) => [...prevFiles, file as IFile]);
         } catch (error) {
             console.error("Error uploading file:", error);
             alert("An error occurred while uploading the file");
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -182,6 +187,7 @@ const StudioPage: React.FC = () => {
                     onFileChange={handleFileChange}
                     showSidebar={showSidebar}
                     toggleSidebar={toggleSidebar}
+                    isUploading={isUploading}
                 />
 
                 <div className="flex-1 flex flex-col p-1 pl-12">
@@ -196,7 +202,7 @@ const StudioPage: React.FC = () => {
                         <div className="overflow-y-auto">
                             {messages.map((message, index) => (
                                 <div key={index} className={`flex ${message.type === "human" ? "justify-end" : "justify-start"} mb-8`}>
-                                    <div className={`p-3 rounded-lg max-w-xs text-sm ${message.type === "human" ? "bg-purple-100" : "bg-gray-100"}`}>
+                                    <div className={`p-3 rounded-lg max-w-xs text-sm ${message.type === "human" ? "bg-[#837FFC] text-white mr-12" : "bg-gray-100"}`}>
                                         {message.data.content}
                                     </div>
                                 </div>

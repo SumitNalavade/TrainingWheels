@@ -111,7 +111,7 @@ const Chat: React.FC = () => {
                         <div className="overflow-y-auto">
                             {messages.map((message, index) => (
                                 <div key={index} className={`flex ${message.type === "human" ? "justify-end" : "justify-start"} mb-8`}>
-                                    <div className={`p-3 rounded-lg max-w-xs text-sm ${message.type === "human" ? "bg-purple-100" : "bg-gray-100"}`}>
+                                    <div className={`p-3 rounded-lg max-w-xs text-sm ${message.type === "human" ? "bg-[#837FFC]" : "bg-gray-100"}`}>
                                         {message.data.content}
                                     </div>
                                 </div>

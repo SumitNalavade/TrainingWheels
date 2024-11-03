@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import { IoSearchOutline } from "react-icons/io5";
 import { FiUpload } from "react-icons/fi";
@@ -18,6 +18,7 @@ interface SidebarProps {
     onFileChange: (file: File) => void;
     showSidebar: boolean;
     toggleSidebar: () => void;
+    isUploading,
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -25,18 +26,20 @@ const Sidebar: React.FC<SidebarProps> = ({
     onFileChange,
     showSidebar,
     toggleSidebar,
+    isUploading,
 }) => {
     const getFileIcon = (file: File) => {
         const iconClass = "text-4xl text-gray-500";
 
         switch (file.type) {
-            case "jpeg":
-            case "jpg":
-            case "png":
+            case "image/jpeg":
+            case "image/jpg":
+            case "image/png":
                 return <CiImageOn className={iconClass} />;
-            case "quicktime":
-            case "mp4":
+            case "video/quicktime":
+            case "video/mp4":
                 return <BsCameraVideo className={iconClass} />;
+            case "application/pdf":
             case "pdf":
                 return <BsFiletypePdf className={iconClass} />;
             default:
@@ -58,7 +61,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     }
 
     return (
-        <div className="w-96 bg-[#FBF7FF] border-r border-gray-100 flex flex-col h-full">
+        <div className="w-96 bg-[#F5F5F5] border-r border-gray-100 flex flex-col h-full">
             <div className="p-4 flex items-center">
                 <button
                     onClick={toggleSidebar}
@@ -74,47 +77,57 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <input
                         type="text"
                         placeholder="Search content"
-                        className="w-full pl-10 pr-4 py-2 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-100 transition-all duration-200"
+                        className="w-full pl-10 pr-4 py-2 border-2 border-[#837FFC] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-100 transition-all duration-200"
                     />
                 </div>
             </div>
 
-            <div className="px-4 mb-4">
-                <FileUploader
-                    handleChange={onFileChange}
-                    name="file"
-                    types={fileTypes}
-                >
-                    <button className="w-full py-3 px-4 bg-[#837FFC] hover:bg-indigo-600 text-white rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2">
-                        <FiUpload className="text-xl" />
-                        <span>Upload files</span>
-                    </button>
-                </FileUploader>
+            <div className="flex-1 overflow-y-auto pl-4 pr-4 pb-4">
+                {isUploading ? (
+                    <div className="flex items-center justify-center h-full">
+                        <div className="loader">Loading...</div>
+                    </div>
+                ) : (
+                    <>
+                        <FileUploader
+                            handleChange={onFileChange}
+                            name="file"
+                        >
+                        </FileUploader>
+                        <div className="h-full w-full border-dashed rounded-lg p-4">
+                            {files.length ? (
+                                <div className="grid grid-cols-2 gap-4 w-full">
+                                    {files.map((file, index) => (
+                                        <a
+                                            key={index}
+                                            href={file.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="m-1"
+                                        >
+                                            <div className="group flex flex-col items-center p-2 space-y-1 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200 cursor-pointer">
+                                                {getFileIcon(file)}
+                                                <span className="text-xs text-gray-600 text-center truncate w-full">
+                                                    {file.name}
+                                                </span>
+                                            </div>
+                                        </a>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="h-full flex items-center justify-center">
+                                    <div className="text-gray-500 text-center">
+                                        Drag and drop or upload.
+                                    </div>
+                                </div>
+                            )}
+
+                        </div>
+                    </>
+                )}
             </div>
 
-            <div className="flex-1 overflow-y-auto px-4">
-                <div className="grid grid-cols-2 gap-4">
-                    {files.map((file, index) => (
-                        <a
-                            key={index}
-                            href={file.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="block"
-                        >
-                            <div className="bg-white border border-gray-100 rounded-lg p-4 hover:shadow-md transition-all duration-200">
-                                <div className="flex flex-col items-center">
-                                    {getFileIcon(file)}
-                                    <span className="mt-2 text-sm text-gray-500 text-center truncate w-full">
-                                        {file.name}
-                                    </span>
-                                </div>
-                            </div>
-                        </a>
-                    ))}
-                </div>
-            </div>
-        </div>
+        </div >
     );
 };
 
