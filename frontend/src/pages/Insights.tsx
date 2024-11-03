@@ -7,7 +7,7 @@ import { Pie } from "react-chartjs-2";
 
 interface KeyTopics { word: string }[]
 
-interface DataDistribution { img: number, jpg: number, pdf: number, mov: number }
+interface DataDistribution { png: number, jpg: number, pdf: number, mov: number, jpeg: number, mp4: number}
 
 const Insights: React.FC = () => {
     const [keyTopics, setKeyTopics] = useState<KeyTopics>();
@@ -49,7 +49,7 @@ const Insights: React.FC = () => {
     };
 
     const pieChartData = {
-        labels: ["IMG", "JPG", "PDF", "MOV"],
+        labels: ["PNG", "JPG", "PDF", "MOV", "JPEG", "MP4"],
         datasets: [
             {
                 data: fileData ? Object.values(fileData) : [0, 0, 0, 0],
