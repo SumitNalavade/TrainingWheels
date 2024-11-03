@@ -8,7 +8,7 @@ import yt from "../assets/yt.svg";
 
 const Footer: React.FC = () => {
     return (
-        <footer className="bg-gray-50 p-8 pb-24">
+        <footer className="bg-gray-50 p-8 pb-8">
             <div className="container mx-auto flex items-start">
 
                 <div className="flex flex-col space-y-4">
@@ -21,7 +21,6 @@ const Footer: React.FC = () => {
                         <img src={linkedin} alt="LinkedIn icon" className="h-6 w-6" />
                     </div>
                 </div>
-
 
                 <div className="flex-1 flex justify-center space-x-40">
 
