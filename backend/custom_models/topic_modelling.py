@@ -8,7 +8,7 @@ from nltk.stem.wordnet import WordNetLemmatizer
 from gensim import corpora
 from gensim.models import LsiModel, LdaModel
 
-def predict(corpus, num_words = 3, model = 'lda'):
+def predict(corpus, num_words = 3, num_topics = 3, model = 'lda'):
     '''
     Given a corpus of a user's text, this function will predict a top number of relevant topics. 
     This can be done using either the Latent Semantic Analysis (LSA) or Latent Dirichlet Allocation (LDA) algorithms.
@@ -34,12 +34,12 @@ def predict(corpus, num_words = 3, model = 'lda'):
 
     #LDA Algorithm
     if(model == 'lda'):
-        lda = LdaModel(doc_term_matrix, num_topics=3, id2word = dictionary)
-        ldamodel = lda.print_topics(num_topics=3, num_words=num_words)
+        lda = LdaModel(doc_term_matrix, num_topics=num_topics, id2word = dictionary)
+        ldamodel = lda.print_topics(num_topics=num_topics, num_words=num_words)
         return ldamodel
     
     #LSA Algorithm
     else:
-        lsa = LsiModel(doc_term_matrix, num_topics=3, id2word = dictionary)
-        lsamodel = lsa.print_topics(num_topics=3, num_words=num_words)
+        lsa = LsiModel(doc_term_matrix, num_topics=num_topics, id2word = dictionary)
+        lsamodel = lsa.print_topics(num_topics=num_topics, num_words=num_words)
         return lsamodel
