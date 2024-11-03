@@ -14,6 +14,7 @@ database_uri = os.getenv("DATABASE_URI")
 
 llm = ChatOpenAI()
 
+
 @rag_routes_bp.route("/search", methods=['POST'])
 def search():
     data = request.get_json()
@@ -23,11 +24,13 @@ def search():
 
     # Build the vector store and retriever
     collection_name = user_id
-    pg_vector_store = build_pg_vector_store(embeddings_model=openai_embeddings, collection_name=collection_name, connection_uri=database_uri)
+    pg_vector_store = build_pg_vector_store(
+        embeddings_model=openai_embeddings, collection_name=collection_name, connection_uri=database_uri)
     pg_vector_retriever = pg_vector_store.as_retriever(search_type="mmr")
 
     # Create the retrieval QA chain
-    retrieval_qa_chain = build_conversational_retrieval_chain_with_memory(llm, pg_vector_retriever, conversation_id)
+    retrieval_qa_chain = build_conversational_retrieval_chain_with_memory(
+        llm, pg_vector_retriever, conversation_id)
 
     # Run the query
     result = retrieval_qa_chain.run(query)
@@ -35,11 +38,9 @@ def search():
     # Construct the response dictionary
     response = {
         "session_id": conversation_id,
-        "message": {
-            "type": "ai",
-            "data": {
+        "type": "ai",
+        "data": {
                 "content": result
-            }
         }
     }
 
