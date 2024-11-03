@@ -1,4 +1,3 @@
-// src/components/Chat.tsx
 import React, { useEffect, useState } from "react";
 import { BsSend } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";

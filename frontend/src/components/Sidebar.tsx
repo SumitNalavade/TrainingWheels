@@ -55,7 +55,6 @@ const Sidebar: React.FC<SidebarProps> = ({
 
     return (
         <div className="w-80 border-r border-gray-200 flex flex-col h-full bg-[#FBF7FF]">
-            {/* Header */}
             <div className="flex justify-between items-center p-4 border-b border-gray-200">
                 <button
                     onClick={toggleSidebar}
@@ -66,7 +65,6 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <FaPenNib className="text-2xl" />
             </div>
 
-            {/* Search */}
             <div className="p-4">
                 <div className="relative">
                     <IoSearchOutline className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
@@ -78,7 +76,6 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </div>
             </div>
 
-            {/* Files Grid */}
             <div className="flex-1 overflow-y-auto p-4">
                 <div className="grid grid-cols-2 gap-4">
                     {files.map((file, index) => (
@@ -95,7 +92,6 @@ const Sidebar: React.FC<SidebarProps> = ({
                 </div>
             </div>
 
-            {/* Upload Button */}
             <div className="p-4 border-t border-gray-200">
                 <FileUploader
                     handleChange={onFileChange}
