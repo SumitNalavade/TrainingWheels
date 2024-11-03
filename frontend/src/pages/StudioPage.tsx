@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router";
 import useAppStore from "../stores/useAppStore";
 import Sidebar from '../components/Sidebar';
 import { FiUpload } from "react-icons/fi";
@@ -8,11 +9,14 @@ import { ImEmbed2 } from "react-icons/im";
 import Chat from "./Chat";
 import { v4 as uuid } from "uuid";
 
+import Navbar from "../components/Navbar";
+
 import EmbedPopup from "../components/EmbedPopup";
 
 // @ts-ignore
 import mascot from "../assets/mascot.png";
 import axios from "axios";
+import { IoShareSocialOutline } from "react-icons/io5";
 
 interface ResponseData {
     type: string,
@@ -38,7 +42,6 @@ interface FileData {
     name: string;
     url: string;
     type: string;
-    // Add other properties as needed
 }
 
 const StudioPage: React.FC = () => {
@@ -59,8 +62,13 @@ const StudioPage: React.FC = () => {
     const [inputMessage, setInputMessage] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [conversationId, setConversationId] = useState(uuid());
+    const [isUploading, setIsUploading] = useState(false);
 
     const user = useAppStore(state => state.user);
+
+    const messagesEndRef = useRef(null);
+
+    const navigate = useNavigate();
 
     const fetchPreviousFiles = async () => {
         try {
@@ -76,6 +84,8 @@ const StudioPage: React.FC = () => {
     };
 
     const handleFileChange = async (file: File) => {
+        setIsUploading(true);
+
         try {
 
             const formData = new FormData();
@@ -91,6 +101,8 @@ const StudioPage: React.FC = () => {
         } catch (error) {
             console.error("Error uploading file:", error);
             alert("An error occurred while uploading the file");
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -139,56 +151,81 @@ const StudioPage: React.FC = () => {
     };
     const toggleSidebar = () => setShowSidebar(!showSidebar);
 
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
+
+    if(!user) {
+        navigate("/signup");
+    }
+
     return (
-        <div className="flex h-screen">
-            <Sidebar
-                files={files}
-                onFileChange={handleFileChange}
-                showSidebar={showSidebar}
-                toggleSidebar={toggleSidebar}
-            />
-
-            <div className="w-3/4 p-1 pl-12 flex flex-col justify-between">
-                <div
-                    className="flex justify-between items-center mt-2 mb-24"
-                    onClick={showShareModal}
-                >
-                    <img src={mascot} alt="Mascot" />
-                    <div className="flex p-3 rounded-lg bg-purple-200 space-x-4 hover:bg-purple-300 cursor-pointer">
-                        <span className="text-md">
-                            Embed
-                        </span>
-                        <ImEmbed2 size={24} />
-                    </div>
+        <div className="h-screen flex flex-col">
+            <nav className="flex items-center justify-between px-6 py-4 bg-[#FBF7FF] border-b">
+                <div className="flex items-center">
+                    <img src={mascot} alt="Mascot" className="h-12 w-auto" />
                 </div>
-                {showModal && (
-                    <EmbedPopup onClose={closeShareModal} embedCode={`<iframe src="http://localhost:5173/chat/${user?.id}" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>`} />
-                )}
-                <div className="space-y-8 overflow-y-auto h-full">
-                    {messages.map((message, index) => (
-                        <div key={index} className={`flex ${message.type === "human" ? "justify-end" : "justify-start"}`}>
-                            <div className={`p-3 rounded-lg max-w-xs text-sm ${message.type === "human" ? "bg-purple-100" : "bg-gray-200"}`}>
-                                {message.data.content}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="flex items-center mt-4 border-t border-gray-200 pt-4 pb-4">
-                    <input
-                        type="text"
-                        placeholder="Type your message here..."
-                        className="w-full p-2 border border-gray-300 bg-[#E0E0E0] rounded-md focus:outline-none text-sm"
-                        value={inputMessage}
-                        onChange={(e) => setInputMessage(e.target.value)}
-                        onKeyDown={handleKeyPress}
-                    />
-                    <button
-                        onClick={handleSendMessage}
-                        className="ml-2 p-2 text-purple-500 hover:text-purple-700"
-                    >
-                        <BsSend size={20} />
+                <div className="text-xl font-semibold space-x-6">
+                    <button className="text-sm antialiased bg-[#F1F0FF] px-2 py-2 rounded-lg">
+                        Product
                     </button>
+                    <button className="text-sm antialiased">Pricing</button>
+                    <button className="text-sm antialiased">Contact</button>
+                    <button onClick={showShareModal} className="rounded-full px-5 py-2 bg-[#837FFC] text-sm text-[#FFFFFF] border border-transparent  hover:border-[#837FFC] hover:bg-indigo-600 antialiased inline-flex items-center gap-2">
+                        Share <IoShareSocialOutline />
+                    </button>
+                </div>
+            </nav>
+
+            <div className="flex-1 flex min-h-0">
+                <Sidebar
+                    files={files}
+                    onFileChange={handleFileChange}
+                    showSidebar={showSidebar}
+                    toggleSidebar={toggleSidebar}
+                    isUploading={isUploading}
+                />
+
+                <div className="flex-1 flex flex-col p-1 pl-12">
+                    {showModal && (
+                        <EmbedPopup
+                            onClose={closeShareModal}
+                            embedCode={`<iframe src="http://localhost:5173/chat/${user?.id}" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>`}
+                        />
+                    )}
+
+                    <div className="flex-1 min-h-0 space-y-8 flex flex-col justify-end" ref={messagesEndRef}>
+                        <div className="overflow-y-auto">
+                            {messages.map((message, index) => (
+                                <div key={index} className={`flex ${message.type === "human" ? "justify-end" : "justify-start"} mb-8`}>
+                                    <div className={`p-3 rounded-lg max-w-xs text-sm ${message.type === "human" ? "bg-[#837FFC] text-white mr-12" : "bg-gray-100"}`}>
+                                        {message.data.content}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="flex items-center border-t border-gray-200 pt-4 pb-4">
+                        <input
+                            type="text"
+                            placeholder="Type your message here..."
+                            className="w-full p-2 border bg-[#FBF7FF] border-gray-300 rounded-md focus:outline-none text-sm"
+                            value={inputMessage}
+                            onChange={(e) => setInputMessage(e.target.value)}
+                            onKeyDown={handleKeyPress}
+                        />
+                        <button
+                            onClick={handleSendMessage}
+                            className="ml-2 p-2 text-[#837FFC]"
+                        >
+                            <BsSend size={20} />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
