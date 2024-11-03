@@ -5,6 +5,7 @@ import { FiUpload } from "react-icons/fi";
 import { BsSend } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
 import { ImEmbed2 } from "react-icons/im";
+import Chat from "../components/Chat";
 
 // @ts-ignore
 import mascot from "../assets/mascot.png";
