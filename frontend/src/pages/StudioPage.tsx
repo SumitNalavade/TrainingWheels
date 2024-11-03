@@ -8,6 +8,8 @@ import { ImEmbed2 } from "react-icons/im";
 import Chat from "./Chat";
 import { v4 as uuid } from "uuid";
 
+import EmbedPopup from "../components/EmbedPopup";
+
 // @ts-ignore
 import mascot from "../assets/mascot.png";
 import axios from "axios";
@@ -159,17 +161,7 @@ const StudioPage: React.FC = () => {
                     </div>
                 </div>
                 {showModal && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                        <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
-                            <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-lg font-semibold">Embed This!</h2>
-                                <button onClick={closeShareModal}>
-                                    <AiOutlineClose size={20} />
-                                </button>
-                            </div>
-                            <p> {'<iframe src="/chat" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>'}</p>
-                        </div>
-                    </div>
+                    <EmbedPopup onClose={closeShareModal} embedCode={`<iframe src="http://localhost:5173/chat/${user?.id}" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>`} />
                 )}
                 <div className="space-y-8 overflow-y-auto h-full">
                     {messages.map((message, index) => (

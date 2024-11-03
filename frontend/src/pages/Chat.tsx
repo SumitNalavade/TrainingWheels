@@ -7,6 +7,8 @@ import { v4 as uuid } from "uuid";
 import mascot from "../assets/mascot.png";
 import axios from "axios";
 
+import EmbedPopup from "../components/EmbedPopup";
+
 interface ResponseData {
     type: string;
     data: {
@@ -94,17 +96,7 @@ const Chat: React.FC = () => {
                 </div>
             </div>
             {showModal && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
-                        <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-lg font-semibold">Embed This!</h2>
-                            <button onClick={closeShareModal}>
-                                <AiOutlineClose size={20} />
-                            </button>
-                        </div>
-                        <p> {`<iframe src="http://localhost:5173/chat/${user_id}" title="Chat" width="100%" height="600" style={{ border: "none" }}></iframe>`}</p>
-                    </div>
-                </div>
+                <EmbedPopup onClose={closeShareModal} />
             )}
 
             <div className="space-y-8 overflow-y-auto h-full">
