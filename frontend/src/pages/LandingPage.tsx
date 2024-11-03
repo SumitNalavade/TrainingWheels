@@ -26,7 +26,7 @@ const LandingPage: React.FC = () => {
 
         <div className="text-xl font-semibold">
           <button
-            className="rounded-lg px-5 py-2 bg-[#E0E0E0] text-md text-[#999999] border border-transparent hover:border-black"
+            className="rounded-lg px-5 py-2 bg-[#E0E0E0] text-md text-[#999999] border border-transparent"
             onClick={handleStartToday}
           >
             Start Today - It's Free
@@ -52,12 +52,12 @@ const LandingPage: React.FC = () => {
             </div>
             <div className="flex space-x-4 mt-6 ml-4">
               <button
-                className="w-48 px-6 py-3 bg-white text-[#837FFC] text-sm rounded-full border border-[#837FFC] hover:border-black"
+                className="w-48 px-6 py-3 bg-white text-[#837FFC] text-sm rounded-full border border-[#837FFC]"
                 onClick={handleStartToday}
               >
                 Get Started For Free
               </button>
-              <button className="w-48 px-6 py-3 bg-[#837FFC] text-white text-sm rounded-full border border-transparent hover:border-black">
+              <button className="w-48 px-6 py-3 bg-[#837FFC] text-white text-sm rounded-full border border-transparent">
                 View Demo
               </button>
             </div>
@@ -164,7 +164,7 @@ const LandingPage: React.FC = () => {
           </span>
         </p>
         <button
-          className="w-60 px-6 py-2 bg-[#837FFC] text-[#FFFFFF] text-sm rounded-full border border-transparent hover:border-black"
+          className="w-60 px-6 py-2 bg-[#837FFC] text-[#FFFFFF] text-sm rounded-full border border-transparent"
           onClick={handleStartToday}
         >
           Create Your Chatbot Now
