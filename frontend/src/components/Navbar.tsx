@@ -2,7 +2,6 @@ import React from "react";
 //@ts-ignore
 import mascot from "../assets/mascot.png";
 import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
 
 interface NavbarProps {
   noMargin?: boolean;
@@ -15,18 +14,16 @@ const Navbar: React.FC<NavbarProps> = ({ noMargin, purple }) => {
     event.preventDefault();
     navigate("/signin");
   };
-  const routeToSignup = (event: React.MouseEvent) => {
-    event.preventDefault();
-    navigate("/signup");
-  };
   return (
     <nav
-      className={`w-full h-24 bg-[#FBF7FF] ${purple ? "bg-[#FBF7FF]" : "bg-[#FFFFFF]"
-        } flex items-center justify-between px-6 py-6 ${noMargin ? "" : "mb-16"
-        } border-b`}
+      className={`w-full h-24 bg-[#FBF7FF] ${
+        purple ? "bg-[#FBF7FF]" : "bg-[#FFFFFF]"
+      } flex items-center justify-between px-6 py-6 ${
+        noMargin ? "" : "mb-16"
+      } border-b`}
     >
       <div className="flex items-center">
-        <Link to="/"> <img src={mascot} alt="Mascot" className="h-12 w-auto" /></Link>
+        <img src={mascot} alt="Mascot" className="h-12 w-auto" />
       </div>
 
       <div className="text-xl font-semibold space-x-6">
@@ -41,9 +38,7 @@ const Navbar: React.FC<NavbarProps> = ({ noMargin, purple }) => {
         >
           Sign In
         </button>
-        <button
-          className="rounded-full px-5 py-2 bg-[#837FFC] text-sm text-[#FFFFFF] border border-transparent hover:text-[#837FFC] hover:bg-[#FFFFFF] hover:border-[#837FFC] antialiased"
-          onClick={routeToSignup}>
+        <button className="rounded-full px-5 py-2 bg-[#837FFC] text-sm text-[#FFFFFF] border border-transparent hover:text-[#837FFC] hover:bg-[#FFFFFF] hover:border-[#837FFC] antialiased">
           Try it for Free
         </button>
       </div>

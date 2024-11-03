@@ -61,7 +61,7 @@ const Chat: React.FC = () => {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
         setInputMessage("");
 
-        const response = (await axios.post("http://127.0.0.1:5000/search", { user_id: user_id, query: inputMessage, conversation_id: conversationId })).data
+        const response = (await axios.post(`${import.meta.env.VITE_SERVER_URL}/search`, { user_id: user_id, query: inputMessage, conversation_id: conversationId })).data
 
         setMessages((prevMessages) => [...prevMessages, response]);
     };
