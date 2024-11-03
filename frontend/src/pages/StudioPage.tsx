@@ -77,7 +77,6 @@ const StudioPage: React.FC = () => {
 
     const handleFileChange = async (file: File) => {
         try {
-            setFiles((prevFiles) => [...prevFiles, file as IFile]);
 
             const formData = new FormData();
             formData.append('file', file);
@@ -87,6 +86,8 @@ const StudioPage: React.FC = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
+
+            setFiles((prevFiles) => [...prevFiles, file as IFile]);
         } catch (error) {
             console.error("Error uploading file:", error);
             alert("An error occurred while uploading the file");
