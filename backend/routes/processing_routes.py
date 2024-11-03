@@ -476,38 +476,6 @@ def get_key_topics():
 
     return jsonify(extracted_strings), 200
 
-
-@processing_routes_bp.route("/get-data-distribution", methods=["GET"])
-def get_data_distribution():
-    '''
-    Given a user_id, get a dictinary returning the distribution of data with regards to file type
-
-    Input: 
-        1. user_id : user id of the user 
-    '''
-
-    # input validation: user_id
-    if 'user_id' not in request.args:
-        return jsonify({"error": "No user_id provided in the request"}), 400
-
-    # access the user id
-    user_id = request.args['user_id']
-    user = User.query.filter_by(id=user_id).first()
-
-    files = db.session.query(File).filter(File.user_id == user_id).all()
-
-    # Initialize dictionary to count file types
-    type_dict = {}
-
-    # Count occurrences of each file type
-    for file in files:
-        if file.type in type_dict:
-            type_dict[file.type] += 1  # Increment the count if type exists
-        else:
-            type_dict[file.type] = 1    # Initialize the count to 1 for a new type
-
-    return jsonify(type_dict), 200  # Return the count of file types as JSON
-
 @processing_routes_bp.route("/get-data-distribution", methods=["GET"])
 def get_data_distribution():
     '''
@@ -535,6 +503,7 @@ def get_data_distribution():
     pftdict = {file_type: 0 for file_type in possible_file_types}
 
     for file in files:
-        pftdict[file] += 1
+        if file.type in possible_file_types:
+            pftdict[file.type] += 1
 
     return jsonify(pftdict), 200  
