@@ -5,6 +5,7 @@ import { FiUpload } from "react-icons/fi";
 import { FiSidebar } from "react-icons/fi";
 import { BsFiletypePdf } from "react-icons/bs";
 import { BsCameraVideo } from "react-icons/bs";
+import { BsUpload } from "react-icons/bs";
 import { CiImageOn } from "react-icons/ci";
 
 const fileTypes = ["jpeg", "jpg", "png", "mov", "pdf", "mp4"];
@@ -89,10 +90,9 @@ const Sidebar: React.FC<SidebarProps> = ({
                         name="file"
                         hoverTitle=""
                     >
-                        <div className="text-black text-center">
-                            <p className="text-lg">Drag and drop your file here</p>
-                            <p>or</p>
-                            <p className="font-semibold">Click to upload</p>
+                        <div className="text-gray-500 text-center flex flex-col items-center justify-center">
+                            <BsUpload className="text-xl text-gray-500" />
+                            <p className="font-semibold">Upload Files</p>
                         </div>
                     </FileUploader>
                 </div>
