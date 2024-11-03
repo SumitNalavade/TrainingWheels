@@ -6,7 +6,7 @@ from database.pg_vector_store import build_pg_vector_store
 from chains.conversational_retrieval_chain_with_memory import build_conversational_retrieval_chain_with_memory
 from langchain.chat_models import ChatOpenAI
 
-from database.database import db, File
+from database.database import db, File, User
 
 rag_routes_bp = Blueprint('rag_routes', __name__)
 
@@ -43,5 +43,12 @@ def search():
                 "content": result
         }
     }
+
+    #adding every user query to the associated users array of queries
+    user = User.query.filter_by(id=user_id).first() 
+    user.message_ids = (user.message_ids or []) + [query]
+
+    # Commit the changes to the database
+    db.session.commit()
 
     return jsonify(response)
