@@ -28,7 +28,7 @@ const router = createBrowserRouter([
     element: (<SignUpPage />),
   },
   {
-    path: "/chat",
+    path: "/chat/:id",
     element: (<Chat />)
   }
 ]);

@@ -8,6 +8,7 @@ import { GrDocumentText } from "react-icons/gr";
 import { BsUpload } from "react-icons/bs";
 import { GoDatabase } from "react-icons/go";
 import { PiBracketsAngleThin } from "react-icons/pi";
+import Footer from "../components/Footer";
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -167,6 +168,8 @@ const LandingPage: React.FC = () => {
           Create Your Chatbot Now
         </button>
       </div>
+
+      <Footer />
     </div>
   );
 };
